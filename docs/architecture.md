@@ -39,6 +39,21 @@ TypeScript -> Kotlin: ready | rendered | openLink | error
 | Renderer delivery | One self-contained HTML resource bundled inside the plugin |
 | Plugin ID | `dev.hyunelab.markdownneat` |
 
+## Lightweight Baseline
+
+Measurements MUST be repeated for releases that materially change the renderer or host lifecycle.
+
+Measured on an Apple Silicon Mac with Java 21 and Node.js 22.21.1:
+
+- Plugin distribution: 64.6 KB
+- Self-contained renderer: 109.6 KB raw, 28.9 KB gzip
+- Renderer module load: 45.6 ms and 4.1 MiB heap
+- 100 KiB Markdown fixture: 185.9 ms median, 297.5 ms p95, and 42.1 MiB retained heap for one rendered result
+
+Run `npm run measure:renderer` to reproduce renderer module load, render latency, and retained heap measurements.  
+Times and memory are a local baseline, not release budgets.  
+They isolate MarkdownNeat's TypeScript renderer in Node.js with JSDOM and do not claim to measure the IDE-owned JCEF runtime.
+
 ## Planned Candidates
 
 | Area | Candidate |
@@ -56,8 +71,6 @@ TypeScript -> Kotlin: ready | rendered | openLink | error
 - Renderer resources MUST be lazy-loaded and disposed with the viewer.
 - Diagram failures MUST remain local to their block.
 - Size, startup, render time, and memory MUST be measured.
-
-The current lightweight baseline and reproduction command are recorded in [Performance](performance.md).
 
 ## Open Decisions
 
