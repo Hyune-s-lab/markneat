@@ -1,4 +1,4 @@
-package dev.hyunelab.markneat.editor
+package dev.hyunelab.markdownneat.editor
 
 import com.intellij.ide.BrowserUtil
 import com.intellij.openapi.application.ApplicationManager
@@ -19,8 +19,8 @@ import com.intellij.openapi.vfs.VirtualFileManager
 import com.intellij.ui.jcef.JBCefBrowser
 import com.intellij.ui.jcef.JBCefBrowserBase
 import com.intellij.ui.jcef.JBCefJSQuery
-import dev.hyunelab.markneat.settings.MarkNeatSettings
-import dev.hyunelab.markneat.settings.MarkNeatSettingsListener
+import dev.hyunelab.markdownneat.settings.MarkdownNeatSettings
+import dev.hyunelab.markdownneat.settings.MarkdownNeatSettingsListener
 import org.cef.browser.CefBrowser
 import org.cef.browser.CefFrame
 import org.cef.handler.CefLoadHandlerAdapter
@@ -28,7 +28,7 @@ import java.beans.PropertyChangeListener
 import java.net.URI
 import javax.swing.JComponent
 
-internal class MarkNeatJcefFileEditor(
+internal class MarkdownNeatJcefFileEditor(
     private val project: Project,
     private val file: VirtualFile,
 ) : UserDataHolderBase(), FileEditor {
@@ -77,8 +77,8 @@ internal class MarkNeatJcefFileEditor(
         }, this)
 
         ApplicationManager.getApplication().messageBus.connect(this).subscribe(
-            MarkNeatSettingsListener.TOPIC,
-            MarkNeatSettingsListener { scheduleThemeRender() },
+            MarkdownNeatSettingsListener.TOPIC,
+            MarkdownNeatSettingsListener { scheduleThemeRender() },
         )
 
         browser.jbCefClient.addLoadHandler(object : CefLoadHandlerAdapter() {
@@ -89,7 +89,7 @@ internal class MarkNeatJcefFileEditor(
             }
         }, browser.cefBrowser)
 
-        val viewerHtml = checkNotNull(javaClass.getResource("/markneat/viewer.html")) {
+        val viewerHtml = checkNotNull(javaClass.getResource("/markdownneat/viewer.html")) {
             "Missing bundled renderer"
         }.readText()
         browser.loadHTML(viewerHtml, file.url)
@@ -97,7 +97,7 @@ internal class MarkNeatJcefFileEditor(
 
     override fun getComponent(): JComponent = browser.component
     override fun getPreferredFocusedComponent(): JComponent = browser.component
-    override fun getName(): String = "MarkNeat"
+    override fun getName(): String = "MarkdownNeat"
     override fun getFile(): VirtualFile = file
     override fun setState(state: FileEditorState) = Unit
     override fun getState(level: FileEditorStateLevel): FileEditorState = FileEditorState.INSTANCE
@@ -109,7 +109,7 @@ internal class MarkNeatJcefFileEditor(
 
     private fun connectRenderer() {
         val script = """
-            window.markneat.connect({
+            window.markdownNeat.connect({
               ready: function() { ${readyQuery.inject("'ready'")} },
               openLink: function(href) { ${openLinkQuery.inject("href")} },
               rendered: function() { ${renderedQuery.inject("'rendered'")} },
@@ -123,11 +123,11 @@ internal class MarkNeatJcefFileEditor(
         if (!rendererReady || !isValid) {
             return
         }
-        val theme = MarkNeatSettings.getInstance().theme.wireValue
+        val theme = MarkdownNeatSettings.getInstance().theme.wireValue
         val request = """
             {"version":1,"source":${document.text.toJsonString()},"baseUrl":${file.url.toJsonString()},"theme":"$theme"}
         """.trimIndent()
-        browser.cefBrowser.executeJavaScript("window.markneat.render($request);", file.url, 0)
+        browser.cefBrowser.executeJavaScript("window.markdownNeat.render($request);", file.url, 0)
     }
 
     private fun scheduleThemeRender() {
@@ -153,6 +153,6 @@ internal class MarkNeatJcefFileEditor(
     }
 
     private companion object {
-        val LOG = Logger.getInstance(MarkNeatJcefFileEditor::class.java)
+        val LOG = Logger.getInstance(MarkdownNeatJcefFileEditor::class.java)
     }
 }

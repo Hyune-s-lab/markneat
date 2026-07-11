@@ -4,34 +4,34 @@ import lightTheme from "github-markdown-css/github-markdown-light.css?inline";
 import "./viewer.css";
 import { renderMarkdown, type RenderRequest } from "./render-markdown";
 
-interface MarkNeatHost {
+interface MarkdownNeatHost {
   error(message: string): void;
   openLink(href: string): void;
   ready(): void;
   rendered(): void;
 }
 
-interface MarkNeatBridge {
-  connect(host: MarkNeatHost): void;
+interface MarkdownNeatBridge {
+  connect(host: MarkdownNeatHost): void;
   render(request: RenderRequest): void;
 }
 
 declare global {
   interface Window {
-    markneat: MarkNeatBridge;
+    markdownNeat: MarkdownNeatBridge;
   }
 }
 
 const viewer = requiredElement("viewer");
 const themeStyle = document.createElement("style");
-themeStyle.dataset.markneatTheme = "true";
+themeStyle.dataset.markdownNeatTheme = "true";
 document.head.append(themeStyle);
 
-let host: MarkNeatHost | undefined;
+let host: MarkdownNeatHost | undefined;
 let pendingRequest: RenderRequest | undefined;
 let renderTimer: number | undefined;
 
-window.markneat = {
+window.markdownNeat = {
   connect(nextHost) {
     host = nextHost;
     host.ready();
@@ -57,14 +57,14 @@ function flushRender(): void {
     const scrollTop = document.documentElement.scrollTop;
     themeStyle.textContent = request.theme === "dark" ? darkTheme : lightTheme;
     document.documentElement.dataset.theme = request.theme;
-    viewer.classList.remove("markneat-error");
+    viewer.classList.remove("markdown-neat-error");
     viewer.innerHTML = renderMarkdown(request).html;
     document.documentElement.scrollTop = scrollTop;
     host?.rendered();
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     viewer.textContent = `Unable to render this document: ${message}`;
-    viewer.classList.add("markneat-error");
+    viewer.classList.add("markdown-neat-error");
     host?.error(message);
   }
 }

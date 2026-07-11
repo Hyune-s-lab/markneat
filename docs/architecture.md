@@ -1,6 +1,6 @@
 # Architecture
 
-This document MUST describe the current MarkNeat architecture. Provisional choices are marked as candidates.
+This document MUST describe the current MarkdownNeat architecture. Provisional choices are marked as candidates.
 
 ```text
 Markdown file
@@ -35,9 +35,9 @@ TypeScript -> Kotlin: ready | rendered | openLink | error
 | Markdown | Marked 18.0.6 |
 | Sanitization | DOMPurify 3.4.11 plus a restrictive Content Security Policy |
 | Initial styling | github-markdown-css 5.9.0 with fixed GitHub Light and GitHub Dark output |
-| Theme setting | Application-level Light or Dark selection under Settings > Tools > MarkNeat |
+| Theme setting | Application-level Light or Dark selection under Settings > Tools > MarkdownNeat |
 | Renderer delivery | One self-contained HTML resource bundled inside the plugin |
-| Plugin ID | `dev.hyunelab.markneat` |
+| Plugin ID | `dev.hyunelab.markdownneat` |
 
 ## Planned Candidates
 
@@ -51,7 +51,7 @@ TypeScript -> Kotlin: ready | rendered | openLink | error
 ## Constraints
 
 - Core rendering MUST work offline.
-- MarkNeat MUST own the normal editor for supported Markdown files while enabled.
+- MarkdownNeat MUST own the normal editor for supported Markdown files while enabled.
 - Content MUST be sanitized and MUST NOT write to the project.
 - Renderer resources MUST be lazy-loaded and disposed with the viewer.
 - Diagram failures MUST remain local to their block.

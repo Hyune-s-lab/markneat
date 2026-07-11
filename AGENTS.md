@@ -1,10 +1,10 @@
-# MarkNeat Agent Guidelines
+# MarkdownNeat Agent Guidelines
 
 ## Product
 
-- MarkNeat MUST remain a lightweight, read-only Markdown viewer for JetBrains IDEs.
+- MarkdownNeat MUST remain a lightweight, read-only Markdown viewer for JetBrains IDEs.
 - Direct human use SHOULD remain intuitive.
-- MarkNeat MUST NOT add editing, autocomplete, inspections, refactoring, WYSIWYG, or background indexing.
+- MarkdownNeat MUST NOT add editing, autocomplete, inspections, refactoring, WYSIWYG, or background indexing.
 - Core rendering MUST work offline and MUST NOT depend on a runtime CDN.
 
 ## Architecture

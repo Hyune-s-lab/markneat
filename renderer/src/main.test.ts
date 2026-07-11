@@ -23,13 +23,13 @@ describe("viewer theme", () => {
     vi.resetModules();
     await import("./main");
 
-    window.markneat.connect({
+    window.markdownNeat.connect({
       error: vi.fn(),
       openLink: vi.fn(),
       ready: vi.fn(),
       rendered: vi.fn(),
     });
-    window.markneat.render({
+    window.markdownNeat.render({
       version: 1,
       source: "# Dark",
       baseUrl: "file:///README.md",
@@ -39,7 +39,7 @@ describe("viewer theme", () => {
     vi.advanceTimersByTime(75);
 
     expect(document.documentElement.dataset.theme).toBe("dark");
-    expect(document.head.querySelector("style[data-markneat-theme]")?.textContent).toContain(
+    expect(document.head.querySelector("style[data-markdown-neat-theme]")?.textContent).toContain(
       "background-color: #0d1117",
     );
     expect(document.getElementById("viewer")?.innerHTML).toContain("<h1");

@@ -52,12 +52,12 @@ val prepareRendererResources by tasks.registering(Copy::class) {
     dependsOn(buildRenderer, npmInstall)
     into(layout.buildDirectory.dir("generated/rendererResources"))
     from(layout.buildDirectory.file("generated/renderer/index.html")) {
-        into("markneat")
+        into("markdownneat")
         rename { "viewer.html" }
     }
     from("LICENSE") {
         into("META-INF")
-        rename { "MARKNEAT-LICENSE.txt" }
+        rename { "MARKDOWNNEAT-LICENSE.txt" }
     }
     from("THIRD_PARTY_NOTICES.md") {
         into("META-INF")
@@ -90,13 +90,13 @@ tasks.check {
 
 intellijPlatform {
     pluginConfiguration {
-        id = "dev.hyunelab.markneat"
-        name = "MarkNeat"
+        id = "dev.hyunelab.markdownneat"
+        name = "MarkdownNeat"
         version = project.version.toString()
 
         description = """
             <p>A lightweight, read-only Markdown viewer for JetBrains IDEs.</p>
-            <p>MarkNeat renders GitHub-style Markdown locally in a focused preview.</p>
+            <p>MarkdownNeat renders GitHub-style Markdown locally in a focused preview.</p>
         """.trimIndent()
 
         ideaVersion {

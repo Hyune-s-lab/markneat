@@ -62,13 +62,13 @@ function createFixture(targetBytes) {
 | Tables | Ready |
 | Links | [Architecture](docs/architecture.md) |
 
-> MarkNeat keeps the host thin and the renderer focused.
+> MarkdownNeat keeps the host thin and the renderer focused.
 
 \`\`\`typescript
 const viewer = "read-only";
 \`\`\`
 `;
-  let fixture = "# MarkNeat Benchmark\n";
+  let fixture = "# MarkdownNeat Benchmark\n";
   while (Buffer.byteLength(fixture) < targetBytes) {
     fixture += section;
   }

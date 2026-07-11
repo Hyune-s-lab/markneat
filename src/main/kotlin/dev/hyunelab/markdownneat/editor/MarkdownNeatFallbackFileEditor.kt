@@ -1,4 +1,4 @@
-package dev.hyunelab.markneat.editor
+package dev.hyunelab.markdownneat.editor
 
 import com.intellij.openapi.editor.event.DocumentEvent
 import com.intellij.openapi.editor.event.DocumentListener
@@ -13,7 +13,7 @@ import com.intellij.ui.components.JBTextArea
 import java.beans.PropertyChangeListener
 import javax.swing.JComponent
 
-internal class MarkNeatFallbackFileEditor(file: VirtualFile) : UserDataHolderBase(), FileEditor {
+internal class MarkdownNeatFallbackFileEditor(file: VirtualFile) : UserDataHolderBase(), FileEditor {
     private val document = requireNotNull(FileDocumentManager.getInstance().getDocument(file))
     private val textArea = JBTextArea(document.text).apply {
         isEditable = false
@@ -32,7 +32,7 @@ internal class MarkNeatFallbackFileEditor(file: VirtualFile) : UserDataHolderBas
 
     override fun getComponent(): JComponent = component
     override fun getPreferredFocusedComponent(): JComponent = textArea
-    override fun getName(): String = "MarkNeat"
+    override fun getName(): String = "MarkdownNeat"
     override fun setState(state: FileEditorState) = Unit
     override fun getState(level: FileEditorStateLevel): FileEditorState = FileEditorState.INSTANCE
     override fun isModified(): Boolean = false

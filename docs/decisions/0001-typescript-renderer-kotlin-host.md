@@ -5,7 +5,7 @@
 
 ## Context
 
-JetBrains integration requires JVM code, while MarkNeat's changing product behavior belongs to the browser rendering ecosystem.
+JetBrains integration requires JVM code, while MarkdownNeat's changing product behavior belongs to the browser rendering ecosystem.
 Splitting rendering logic across Kotlin and TypeScript would duplicate concepts and make changes cross two implementations.
 
 ## Decision

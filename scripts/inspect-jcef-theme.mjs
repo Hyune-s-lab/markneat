@@ -3,16 +3,16 @@ import assert from "node:assert/strict";
 const expectedTheme = process.argv[2] ?? "dark";
 const port = process.env.JCEF_DEBUG_PORT ?? "9222";
 const targets = await fetch(`http://127.0.0.1:${port}/json/list`).then((response) => response.json());
-const target = targets.find((candidate) => candidate.title === "MarkNeat");
+const target = targets.find((candidate) => candidate.title === "MarkdownNeat");
 
 assert(
   target,
-  `MarkNeat page not found. Open the MarkNeat editor tab first. Found: ${targets.map((item) => item.title).join(", ")}`,
+  `MarkdownNeat page not found. Open the MarkdownNeat editor tab first. Found: ${targets.map((item) => item.title).join(", ")}`,
 );
 
 const result = await evaluate(target.webSocketDebuggerUrl, `(() => {
   const viewer = document.getElementById("viewer");
-  const themeStyle = document.head.querySelector("style[data-markneat-theme]");
+  const themeStyle = document.head.querySelector("style[data-markdown-neat-theme]");
   return {
     theme: document.documentElement.dataset.theme,
     rootBackground: getComputedStyle(document.documentElement).backgroundColor,
@@ -35,7 +35,7 @@ function evaluate(webSocketUrl, expression) {
     const socket = new WebSocket(webSocketUrl);
     const timeout = setTimeout(() => {
       socket.close();
-      reject(new Error("Timed out while inspecting the MarkNeat page"));
+      reject(new Error("Timed out while inspecting the MarkdownNeat page"));
     }, 5_000);
 
     socket.addEventListener("open", () => {
@@ -60,7 +60,7 @@ function evaluate(webSocketUrl, expression) {
     });
     socket.addEventListener("error", () => {
       clearTimeout(timeout);
-      reject(new Error("Unable to connect to the MarkNeat DevTools target"));
+      reject(new Error("Unable to connect to the MarkdownNeat DevTools target"));
     });
   });
 }

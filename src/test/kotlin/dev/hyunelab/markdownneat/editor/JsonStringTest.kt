@@ -1,4 +1,4 @@
-package dev.hyunelab.markneat.editor
+package dev.hyunelab.markdownneat.editor
 
 import kotlin.test.Test
 import kotlin.test.assertEquals

@@ -35,7 +35,7 @@ body {
   pointer-events: none;
 }
 
-.markneat-error {
+.markdown-neat-error {
   color: #cf222e;
   white-space: pre-wrap;
 }

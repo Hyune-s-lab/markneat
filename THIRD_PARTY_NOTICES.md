@@ -1,6 +1,6 @@
 # Third-Party Notices
 
-MarkNeat 0.1.0 bundles the following runtime dependencies:
+MarkdownNeat 0.1.0 bundles the following runtime dependencies:
 
 - [Marked 18.0.6](https://github.com/markedjs/marked) — MIT License
 - [DOMPurify 3.4.11](https://github.com/cure53/DOMPurify) — Apache License 2.0

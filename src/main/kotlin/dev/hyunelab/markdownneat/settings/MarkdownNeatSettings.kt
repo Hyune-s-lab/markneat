@@ -1,11 +1,11 @@
-package dev.hyunelab.markneat.settings
+package dev.hyunelab.markdownneat.settings
 
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
 
-enum class MarkNeatTheme(
+enum class MarkdownNeatTheme(
     val displayName: String,
     val wireValue: String,
 ) {
@@ -17,20 +17,20 @@ enum class MarkNeatTheme(
 }
 
 @State(
-    name = "dev.hyunelab.markneat.settings.MarkNeatSettings",
-    storages = [Storage("markneat.xml")],
+    name = "dev.hyunelab.markdownneat.settings.MarkdownNeatSettings",
+    storages = [Storage("markdownneat.xml")],
 )
-class MarkNeatSettings : PersistentStateComponent<MarkNeatSettings.SettingsState> {
+class MarkdownNeatSettings : PersistentStateComponent<MarkdownNeatSettings.SettingsState> {
     data class SettingsState(
-        var theme: MarkNeatTheme = MarkNeatTheme.LIGHT,
+        var theme: MarkdownNeatTheme = MarkdownNeatTheme.LIGHT,
     )
 
     private var settingsState = SettingsState()
 
-    val theme: MarkNeatTheme
+    val theme: MarkdownNeatTheme
         get() = settingsState.theme
 
-    fun updateTheme(theme: MarkNeatTheme): Boolean {
+    fun updateTheme(theme: MarkdownNeatTheme): Boolean {
         if (settingsState.theme == theme) {
             return false
         }
@@ -45,7 +45,7 @@ class MarkNeatSettings : PersistentStateComponent<MarkNeatSettings.SettingsState
     }
 
     companion object {
-        fun getInstance(): MarkNeatSettings =
-            ApplicationManager.getApplication().getService(MarkNeatSettings::class.java)
+        fun getInstance(): MarkdownNeatSettings =
+            ApplicationManager.getApplication().getService(MarkdownNeatSettings::class.java)
     }
 }

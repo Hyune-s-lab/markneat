@@ -1,4 +1,4 @@
-package dev.hyunelab.markneat.editor
+package dev.hyunelab.markdownneat.editor
 
 internal fun String.toJsonString(): String = buildString(length + 2) {
     append('"')

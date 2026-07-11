@@ -38,12 +38,12 @@ describe("renderMarkdown", () => {
   it("creates stable GitHub-style anchors for headings", () => {
     const result = renderMarkdown({
       version: 1,
-      source: "## Hello, MarkNeat!\n\n## Hello, MarkNeat!",
+      source: "## Hello, MarkdownNeat!\n\n## Hello, MarkdownNeat!",
       baseUrl: "file:///project/readme.md",
       theme: "light",
     });
 
-    expect(result.html).toContain('<h2 id="hello-markneat">');
-    expect(result.html).toContain('<h2 id="hello-markneat-1">');
+    expect(result.html).toContain('<h2 id="hello-markdownneat">');
+    expect(result.html).toContain('<h2 id="hello-markdownneat-1">');
   });
 });

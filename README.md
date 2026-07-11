@@ -1,4 +1,4 @@
-# MarkNeat
+# MarkdownNeat
 
 > A lightweight, read-only Markdown viewer for JetBrains IDEs.
 
