@@ -32,6 +32,8 @@
 - GitHub Release titles MUST use the `v<version>` form, such as `v0.1.0`.
 - Release notes MUST group changes by change type, using Spring Boot-style emoji headings such as `:star: New Features`, `:lady_beetle: Bug Fixes`, `:notebook_with_decorative_cover: Documentation`, and `:hammer: Dependency Upgrades`.
 - All feature changes in one release MUST share a single `:star: New Features` section; split sections only when the change type differs.
+- Every published GitHub Release MUST trigger a build of its `v<version>` tag, pass `verifyRelease`, and attach the resulting plugin ZIP to the same GitHub Release.
+- Marketplace uploads MAY be automated only after the first manual Marketplace listing and signing credentials are configured; JetBrains approval remains manual.
 - Detailed status or decisions MUST NOT be duplicated across documents.
 
 ## Verification
