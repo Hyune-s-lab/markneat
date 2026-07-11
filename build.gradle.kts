@@ -59,9 +59,6 @@ val prepareRendererResources by tasks.registering(Copy::class) {
         into("META-INF")
         rename { "MARKDOWNNEAT-LICENSE.txt" }
     }
-    from("THIRD_PARTY_NOTICES.md") {
-        into("META-INF")
-    }
     from("node_modules/marked/LICENSE") {
         into("META-INF/licenses")
         rename { "marked-MIT.txt" }

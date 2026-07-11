@@ -17,4 +17,6 @@
 
 ## License
 
-[MIT](LICENSE)
+MarkdownNeat is licensed under [MIT](LICENSE).  
+Bundled runtime licenses: [Marked](https://github.com/markedjs/marked) (MIT), [DOMPurify](https://github.com/cure53/DOMPurify) (Apache 2.0), and [github-markdown-css](https://github.com/sindresorhus/github-markdown-css) (MIT).  
+Complete dependency license texts are included in the plugin distribution.
