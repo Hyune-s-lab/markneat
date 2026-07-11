@@ -41,6 +41,7 @@
 ## Git
 
 - Work MUST happen on a focused branch and reach `main` through a pull request.
+- Pull requests MUST be opened ready for review, MUST NOT be drafts, and MUST assign `Hyune-c`.
 - AI agents MUST NOT merge pull requests. Only the project owner may merge.
 - Unrelated changes MUST NOT be mixed in one commit.
 - Generated output, IDE caches, and local environment files MUST NOT be committed.
