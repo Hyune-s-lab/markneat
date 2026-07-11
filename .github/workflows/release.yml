@@ -27,7 +27,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           RELEASE_TAG: ${{ steps.release.outputs.tag }}
-        run: test "$(gh release view "$RELEASE_TAG" --json isDraft --jq .isDraft)" = true
+        run: test "$(gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" --json isDraft --jq .isDraft)" = true
 
       - name: Check out release
         uses: actions/checkout@v7
