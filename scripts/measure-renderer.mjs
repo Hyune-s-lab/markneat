@@ -14,10 +14,16 @@ const heapAfterLoad = process.memoryUsage().heapUsed;
 
 const source = createFixture(100 * 1024);
 const request = {
-  version: 1,
+  version: 3,
   source,
   baseUrl: "file:///benchmark/README.md",
+  documentType: "markdown",
   theme: "light",
+  profile: "compact",
+  bodyFontFamily: "",
+  codeFontFamily: "",
+  fontScale: 100,
+  maxContentWidth: null,
 };
 
 globalThis.gc?.();

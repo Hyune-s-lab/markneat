@@ -5,11 +5,16 @@ import { renderDocument } from "./render-document";
 describe("renderDocument", () => {
   it("turns a standalone Mermaid file into a safe diagram block", () => {
     const result = renderDocument({
-      version: 2,
+      version: 3,
       source: 'flowchart LR\n  A["<script>alert(1)</script>"] --> B',
       baseUrl: "file:///project/system.mmd",
       documentType: "mermaid",
       theme: "light",
+      profile: "compact",
+      bodyFontFamily: "",
+      codeFontFamily: "",
+      fontScale: 100,
+      maxContentWidth: 1152,
     });
 
     expect(result.html).toContain('class="language-mermaid"');

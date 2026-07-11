@@ -2,6 +2,7 @@ import darkTheme from "github-markdown-css/github-markdown-dark.css?inline";
 import lightTheme from "github-markdown-css/github-markdown-light.css?inline";
 
 import "./viewer.css";
+import { applyAppearance } from "./apply-appearance";
 import { loadRuntime, runtimeFailed, runtimeReady } from "./load-runtime";
 import { renderDocument } from "./render-document";
 import { renderMermaidDiagrams } from "./render-mermaid";
@@ -75,6 +76,7 @@ async function renderRequest(request: RenderRequest, generation: number): Promis
     const scrollTop = document.documentElement.scrollTop;
     themeStyle.textContent = request.theme === "dark" ? darkTheme : lightTheme;
     document.documentElement.dataset.theme = request.theme;
+    applyAppearance(document.documentElement, viewer, request);
     viewer.classList.remove("markdown-neat-error");
     viewer.innerHTML = renderDocument(request).html;
     await renderMermaidDiagrams(

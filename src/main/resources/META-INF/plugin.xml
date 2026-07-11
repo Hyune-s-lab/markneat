@@ -5,10 +5,11 @@
 
     <description><![CDATA[
         <p>MarkdownNeat is a read-only Markdown viewer for JetBrains IDEs.</p>
-        <p>It renders GitHub Flavored Markdown and Mermaid diagrams offline with Light and Dark themes independent of the IDE.</p>
+        <p>It renders GitHub Flavored Markdown and Mermaid diagrams offline with GitHub Light and GitHub Dark themes independent of the IDE.</p>
         <ul>
             <li>GitHub Flavored Markdown and Mermaid diagrams</li>
-            <li>Independent Light and Dark themes</li>
+            <li>Independent GitHub Light and GitHub Dark themes</li>
+            <li>Compact and Spacious profiles with configurable fonts, text scaling, content width, and live preview</li>
             <li>Automatic refresh with relative images and links</li>
             <li>Offline rendering with untrusted content sanitization</li>
         </ul>

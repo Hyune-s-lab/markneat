@@ -5,11 +5,16 @@ import { renderMarkdown } from "./render-markdown";
 describe("renderMarkdown", () => {
   it("renders GitHub-flavored task lists", () => {
     const result = renderMarkdown({
-      version: 2,
+      version: 3,
       source: "# Tasks\n\n- [x] Render Markdown",
       baseUrl: "file:///project/docs/guide.md",
       documentType: "markdown",
       theme: "light",
+      profile: "compact",
+      bodyFontFamily: "",
+      codeFontFamily: "",
+      fontScale: 100,
+      maxContentWidth: 1152,
     });
 
     expect(result.html).toContain('<h1 id="tasks">Tasks</h1>');
@@ -19,7 +24,7 @@ describe("renderMarkdown", () => {
 
   it("removes executable and interactive content", () => {
     const result = renderMarkdown({
-      version: 2,
+      version: 3,
       source: [
         '<script>alert("no")</script>',
         '<div style="position: fixed" onclick="alert(1)">content</div>',
@@ -29,6 +34,11 @@ describe("renderMarkdown", () => {
       baseUrl: "file:///project/unsafe.md",
       documentType: "markdown",
       theme: "dark",
+      profile: "compact",
+      bodyFontFamily: "",
+      codeFontFamily: "",
+      fontScale: 100,
+      maxContentWidth: 1152,
     });
 
     expect(result.html).not.toMatch(/script|onclick|style=|javascript:/i);
@@ -39,11 +49,16 @@ describe("renderMarkdown", () => {
 
   it("creates stable GitHub-style anchors for headings", () => {
     const result = renderMarkdown({
-      version: 2,
+      version: 3,
       source: "## Hello, MarkdownNeat!\n\n## Hello, MarkdownNeat!",
       baseUrl: "file:///project/readme.md",
       documentType: "markdown",
       theme: "light",
+      profile: "compact",
+      bodyFontFamily: "",
+      codeFontFamily: "",
+      fontScale: 100,
+      maxContentWidth: 1152,
     });
 
     expect(result.html).toContain('<h2 id="hello-markdownneat">');

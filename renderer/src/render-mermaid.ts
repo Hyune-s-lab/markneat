@@ -34,6 +34,8 @@ export async function renderMermaidDiagrams(
     (code) => {
       const container = document.createElement("div");
       container.className = "markdown-neat-diagram";
+      container.style.fontSize = "16px";
+      container.style.lineHeight = "1.5";
       container.setAttribute("role", "img");
       container.setAttribute("aria-label", "Mermaid diagram");
       const source = code.textContent ?? "";

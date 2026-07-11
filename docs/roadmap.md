@@ -1,38 +1,33 @@
 # Roadmap
 
-## 0.1.0 — Markdown Viewer
+## 0.1.x — Markdown Viewer
 
 - Ship a lightweight, read-only Markdown viewer for JetBrains IDEs.
 - Render GitHub Flavored Markdown with GitHub Light and GitHub Dark themes, independent of the IDE theme.
 - Support automatic refresh, relative images and links, offline rendering, sanitization, and a JCEF fallback.
 
-## 0.2.0 — Mermaid
+## 0.2.x — Mermaid and Runtime Compatibility
 
 - Render Mermaid 11.16.0 in fenced Markdown blocks and standalone `.mmd` and `.mermaid` files.
 - Bundle the required Mermaid runtime and a curated Material Design Icons subset for offline use.
 - Provide `mdi:account`, `mdi:api`, `mdi:cloud`, `mdi:cog`, `mdi:database`, `mdi:message-processing`, `mdi:server`, and `mdi:web` offline.
 - Isolate diagram failures and provide local diagnostics.
 - Load Mermaid only when a document needs it, through the shared optional-runtime boundary for future diagram engines.
+- Load JCEF correctly on modular IDE runtimes and use IntelliJ Platform 2026.1 as the compatibility baseline, where the exclusive viewer policy is stable.
 
-## 0.2.1 — JCEF Compatibility
+## 0.3.x — Appearance
 
-- Add explicit JCEF dependency metadata for newer IDE class loaders.
-
-## 0.2.2 — JCEF Runtime Compatibility
-
-- Correct the optional JCEF dependency for the modular runtime used by IntelliJ Platform 2026.2.
-- Set IntelliJ Platform 2026.1 as the compatibility baseline, where the exclusive viewer policy is stable.
-
-## 0.3.0 — Appearance
-
-- Add Standard (compact and restrained) and Enhanced (spacious and expressive) rendering profiles.
-- Add bundled themes beyond GitHub Light and GitHub Dark.
-- Configure body and code font family and 90%–180% scaling.
+- Add Compact and Spacious reading profiles on the GitHub Light and GitHub Dark base palettes, with a distinct Spacious heading accent.
+- Choose body and code fonts independently from curated sets of installed system fonts.
+- Scale document text from 90%–180% without scaling image or diagram geometry.
+- Configure a profile-independent content width from 768–1536 px or use the full available width.
 - Preview theme, profile, and typography changes before applying them.
 
 ## Later
 
+- Add offline syntax highlighting with a deliberately scoped set of language grammars.
 - Add D2 and Excalidraw through the shared optional-runtime boundary.
+- Add bundled themes beyond GitHub Light and GitHub Dark.
 - Add Markdown extensions such as footnotes, alerts, and math rendering where they remain lightweight and safe.
 - Add optional custom CSS overrides and a copyable AI usage guide.
 

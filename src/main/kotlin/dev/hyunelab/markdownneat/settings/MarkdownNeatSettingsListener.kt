@@ -3,7 +3,7 @@ package dev.hyunelab.markdownneat.settings
 import com.intellij.util.messages.Topic
 
 fun interface MarkdownNeatSettingsListener {
-    fun themeChanged()
+    fun settingsChanged()
 
     companion object {
         @field:Topic.AppLevel

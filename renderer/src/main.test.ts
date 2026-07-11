@@ -11,6 +11,7 @@ describe("viewer theme", () => {
   beforeEach(() => {
     vi.useFakeTimers();
     document.documentElement.removeAttribute("data-theme");
+    document.documentElement.removeAttribute("data-profile");
     delete window.markdownNeatRuntimes;
     document.head.innerHTML = "";
     document.body.innerHTML = '<main id="viewer" class="markdown-body"></main>';
@@ -32,20 +33,123 @@ describe("viewer theme", () => {
       rendered: vi.fn(),
     });
     window.markdownNeat.render({
-      version: 2,
+      version: 3,
       source: "# Dark",
       baseUrl: "file:///README.md",
       documentType: "markdown",
       theme: "dark",
+      profile: "compact",
+      bodyFontFamily: "",
+      codeFontFamily: "",
+      fontScale: 100,
     });
 
     await vi.advanceTimersByTimeAsync(75);
 
     expect(document.documentElement.dataset.theme).toBe("dark");
+    expect(document.getElementById("viewer")?.style.maxWidth).toBe("none");
     expect(document.head.querySelector("style[data-markdown-neat-theme]")?.textContent).toContain(
       "background-color: #0d1117",
     );
     expect(document.getElementById("viewer")?.innerHTML).toContain("<h1");
+  });
+
+  it("applies spacious typography without resizing document images", async () => {
+    vi.resetModules();
+    await import("./main");
+
+    window.markdownNeat.connect({
+      error: vi.fn(),
+      loadRuntime: vi.fn(),
+      openLink: vi.fn(),
+      ready: vi.fn(),
+      rendered: vi.fn(),
+    });
+    window.markdownNeat.render({
+      version: 3,
+      source: "# Readable\n\n![Diagram](diagram.png)",
+      baseUrl: "file:///README.md",
+      documentType: "markdown",
+      theme: "light",
+      profile: "spacious",
+      bodyFontFamily: "Atkinson Hyperlegible",
+      codeFontFamily: "JetBrains Mono",
+      fontScale: 130,
+      maxContentWidth: 1280,
+    });
+
+    await vi.advanceTimersByTimeAsync(75);
+
+    const viewer = document.getElementById("viewer");
+    const image = viewer?.querySelector("img");
+    expect(document.documentElement.dataset.profile).toBe("spacious");
+    expect(document.documentElement.style.getPropertyValue("--markdown-neat-accent")).toBe(
+      "#bc4c00",
+    );
+    expect(viewer?.style.fontSize).toBe("20.8px");
+    expect(viewer?.style.lineHeight).toBe("1.75");
+    expect(viewer?.style.maxWidth).toBe("1280px");
+    expect(viewer?.style.fontFamily).toContain("Atkinson Hyperlegible");
+    expect(viewer?.style.getPropertyValue("--markdown-neat-code-font")).toContain(
+      "JetBrains Mono",
+    );
+    expect(image?.style.width).toBe("");
+    expect(image?.style.transform).toBe("");
+  });
+
+  it("clamps text scaling and clears custom fonts when defaults are restored", async () => {
+    vi.resetModules();
+    await import("./main");
+
+    window.markdownNeat.connect({
+      error: vi.fn(),
+      loadRuntime: vi.fn(),
+      openLink: vi.fn(),
+      ready: vi.fn(),
+      rendered: vi.fn(),
+    });
+    window.markdownNeat.render({
+      version: 3,
+      source: "Text",
+      baseUrl: "file:///README.md",
+      documentType: "markdown",
+      theme: "dark",
+      profile: "spacious",
+      bodyFontFamily: "Inter",
+      codeFontFamily: "JetBrains Mono",
+      fontScale: 500,
+      maxContentWidth: 9999,
+    });
+    await vi.advanceTimersByTimeAsync(75);
+
+    const viewer = document.getElementById("viewer");
+    expect(viewer?.style.fontSize).toBe("28.8px");
+    expect(viewer?.style.maxWidth).toBe("1536px");
+    expect(document.documentElement.style.getPropertyValue("--markdown-neat-accent")).toBe(
+      "#f0883e",
+    );
+
+    window.markdownNeat.render({
+      version: 3,
+      source: "Text",
+      baseUrl: "file:///README.md",
+      documentType: "markdown",
+      theme: "light",
+      profile: "compact",
+      bodyFontFamily: "",
+      codeFontFamily: "",
+      fontScale: 50,
+      maxContentWidth: null,
+    });
+    await vi.advanceTimersByTimeAsync(75);
+
+    expect(document.documentElement.dataset.profile).toBe("compact");
+    expect(viewer?.style.fontSize).toBe("14.4px");
+    expect(viewer?.style.maxWidth).toBe("none");
+    expect(viewer?.style.lineHeight).toBe("1.5");
+    expect(viewer?.style.fontFamily).toBe("");
+    expect(viewer?.dataset.customCodeFont).toBeUndefined();
+    expect(viewer?.style.getPropertyValue("--markdown-neat-code-font")).toBe("");
   });
 
   it("loads Mermaid only when a diagram block is rendered", async () => {
@@ -62,11 +166,16 @@ describe("viewer theme", () => {
       rendered,
     });
     window.markdownNeat.render({
-      version: 2,
+      version: 3,
       source: "```mermaid\nflowchart LR\nA --> B\n```",
       baseUrl: "file:///README.md",
       documentType: "markdown",
       theme: "light",
+      profile: "compact",
+      bodyFontFamily: "",
+      codeFontFamily: "",
+      fontScale: 150,
+      maxContentWidth: 1152,
     });
 
     await vi.advanceTimersByTimeAsync(75);
@@ -82,7 +191,12 @@ describe("viewer theme", () => {
     window.markdownNeat.runtimeReady("mermaid");
     await vi.runAllTimersAsync();
 
-    expect(document.getElementById("viewer")?.textContent).toContain("Diagram");
+    const diagram = document.querySelector<HTMLElement>(".markdown-neat-diagram");
+    expect(document.getElementById("viewer")?.style.fontSize).toBe("24px");
+    expect(diagram?.textContent).toContain("Diagram");
+    expect(getComputedStyle(diagram!).fontSize).toBe("16px");
+    expect(getComputedStyle(diagram!).lineHeight).toBe("1.5");
     expect(rendered).toHaveBeenCalledOnce();
   });
+
 });

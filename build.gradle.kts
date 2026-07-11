@@ -118,8 +118,8 @@ intellijPlatform {
         version = project.version.toString()
         changeNotes = """
             <ul>
-              <li>Fix JCEF class loading in IntelliJ Platform 2026.2.</li>
-              <li>Use IntelliJ Platform 2026.1 as the compatibility baseline.</li>
+              <li>Add Compact and Spacious reading profiles.</li>
+              <li>Add body and code font selection, 90%–180% text scaling, adjustable content width, and live preview.</li>
             </ul>
             <p>See the <a href="https://github.com/Hyune-s-lab/markdown-neat/releases/tag/v${project.version}">GitHub release notes</a>.</p>
         """.trimIndent()
