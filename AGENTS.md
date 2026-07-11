@@ -25,7 +25,7 @@
 ## Documentation
 
 - `README.md` MUST remain a concise product entry point and describe only key product capabilities.
-- `docs/roadmap.md` MUST own the feature matrix and future scope.
+- `docs/roadmap.md` MUST own versioned release scope and future work.
 - `docs/architecture.md` MUST describe only the current architecture; accepted decisions belong under `docs/decisions/`.
 - Detailed status or decisions MUST NOT be duplicated across documents.
 
