@@ -1,14 +1,15 @@
 # MarkdownNeat
 
-> A lightweight, read-only Markdown viewer for JetBrains IDEs.
+> A lightweight, read-only Markdown viewer for JetBrains IDEs.  
+> AI and IDE tools edit plain Markdown; MarkdownNeat renders it for reading.
 
-## Principles
+## Features
 
-- Read-only and lightweight by design
-- AI and IDE tools edit plain Markdown; MarkdownNeat only renders it for reading
-- Built-in diagram rendering, starting with Mermaid
-- Standard and Enhanced profiles, bundled themes, and adjustable typography
-- Offline core rendering with safe handling of untrusted content
+- GitHub-style Markdown rendering
+- Read-only viewing with automatic refresh
+- Light and Dark themes independent of the IDE theme
+- Relative image and link support
+- Offline rendering with untrusted content sanitization
 
 ## Documentation
 
