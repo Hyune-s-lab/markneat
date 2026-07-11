@@ -8,8 +8,7 @@ Markdown file
     -> JCEF
     -> deep TypeScript renderer
         -> Markdown
-        -> themes
-        -> diagram engines
+        -> GitHub themes
 ```
 
 ## Ownership
@@ -37,11 +36,16 @@ TypeScript -> Kotlin: ready | rendered | openLink | error
 | Sanitization | DOMPurify 3.4.11 plus a restrictive Content Security Policy |
 | Initial styling | github-markdown-css 5.9.0 with fixed GitHub Light and GitHub Dark output |
 | Renderer delivery | One self-contained HTML resource bundled inside the plugin |
+| Plugin ID | `dev.hyunelab.markneat` |
+
+## Planned Candidates
+
+| Area | Candidate |
+| --- | --- |
 | First diagram engine | Mermaid 11.16.0 |
 | Mermaid icons | Curated, bundled Iconify packs |
 | Rendering profiles | Standard and Enhanced |
 | Typography | Configurable body and code font family/size |
-| Plugin ID | `dev.hyunelab.markneat` |
 
 ## Constraints
 
@@ -51,6 +55,8 @@ TypeScript -> Kotlin: ready | rendered | openLink | error
 - Diagram failures MUST remain local to their block.
 - Size, startup, render time, and memory MUST be measured.
 
+The current lightweight baseline and reproduction command are recorded in [Performance](performance.md).
+
 ## Open Decisions
 
 - Syntax highlighter
@@ -58,6 +64,6 @@ TypeScript -> Kotlin: ready | rendered | openLink | error
 - Font discovery and fallback behavior
 - D2 runtime and syntax convention
 - Excalidraw read-only workflow
-- Initial Iconify packs and third-party license notices
+- Initial Iconify packs
 - Render diagnostic interface and AI usage guide format
 - Marketplace identity and logo

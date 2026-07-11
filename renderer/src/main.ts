@@ -28,6 +28,8 @@ themeStyle.dataset.markneatTheme = "true";
 document.head.append(themeStyle);
 
 let host: MarkNeatHost | undefined;
+let pendingRequest: RenderRequest | undefined;
+let renderTimer: number | undefined;
 
 window.markneat = {
   connect(nextHost) {
@@ -35,22 +37,37 @@ window.markneat = {
     host.ready();
   },
   render(request) {
-    try {
-      const scrollTop = document.documentElement.scrollTop;
-      themeStyle.textContent = request.theme === "dark" ? darkTheme : lightTheme;
-      document.documentElement.dataset.theme = request.theme;
-      viewer.classList.remove("markneat-error");
-      viewer.innerHTML = renderMarkdown(request).html;
-      document.documentElement.scrollTop = scrollTop;
-      host?.rendered();
-    } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
-      viewer.textContent = `Unable to render this document: ${message}`;
-      viewer.classList.add("markneat-error");
-      host?.error(message);
+    pendingRequest = request;
+    if (renderTimer !== undefined) {
+      window.clearTimeout(renderTimer);
     }
+    renderTimer = window.setTimeout(flushRender, 75);
   },
 };
+
+function flushRender(): void {
+  const request = pendingRequest;
+  pendingRequest = undefined;
+  renderTimer = undefined;
+  if (request === undefined) {
+    return;
+  }
+
+  try {
+    const scrollTop = document.documentElement.scrollTop;
+    themeStyle.textContent = request.theme === "dark" ? darkTheme : lightTheme;
+    document.documentElement.dataset.theme = request.theme;
+    viewer.classList.remove("markneat-error");
+    viewer.innerHTML = renderMarkdown(request).html;
+    document.documentElement.scrollTop = scrollTop;
+    host?.rendered();
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    viewer.textContent = `Unable to render this document: ${message}`;
+    viewer.classList.add("markneat-error");
+    host?.error(message);
+  }
+}
 
 document.addEventListener("click", (event) => {
   const target = event.target;

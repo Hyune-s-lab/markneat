@@ -20,7 +20,6 @@ import com.intellij.ui.JBColor
 import com.intellij.ui.jcef.JBCefBrowser
 import com.intellij.ui.jcef.JBCefBrowserBase
 import com.intellij.ui.jcef.JBCefJSQuery
-import com.intellij.util.Alarm
 import org.cef.browser.CefBrowser
 import org.cef.browser.CefFrame
 import org.cef.handler.CefLoadHandlerAdapter
@@ -38,7 +37,6 @@ internal class MarkNeatJcefFileEditor(
     private val openLinkQuery = JBCefJSQuery.create(browser as JBCefBrowserBase)
     private val renderedQuery = JBCefJSQuery.create(browser as JBCefBrowserBase)
     private val errorQuery = JBCefJSQuery.create(browser as JBCefBrowserBase)
-    private val renderAlarm = Alarm(Alarm.ThreadToUse.SWING_THREAD, this)
     private var rendererReady = false
 
     init {
@@ -73,13 +71,13 @@ internal class MarkNeatJcefFileEditor(
 
         document.addDocumentListener(object : DocumentListener {
             override fun documentChanged(event: DocumentEvent) {
-                scheduleRender()
+                render()
             }
         }, this)
 
         ApplicationManager.getApplication().messageBus.connect(this).subscribe(
             LafManagerListener.TOPIC,
-            LafManagerListener { scheduleRender() },
+            LafManagerListener { render() },
         )
 
         browser.jbCefClient.addLoadHandler(object : CefLoadHandlerAdapter() {
@@ -120,14 +118,6 @@ internal class MarkNeatJcefFileEditor(
         browser.cefBrowser.executeJavaScript(script, file.url, 0)
     }
 
-    private fun scheduleRender() {
-        if (!rendererReady) {
-            return
-        }
-        renderAlarm.cancelAllRequests()
-        renderAlarm.addRequest(::render, RENDER_DELAY_MS)
-    }
-
     private fun render() {
         if (!rendererReady || !isValid) {
             return
@@ -154,6 +144,5 @@ internal class MarkNeatJcefFileEditor(
 
     private companion object {
         val LOG = Logger.getInstance(MarkNeatJcefFileEditor::class.java)
-        const val RENDER_DELAY_MS = 75
     }
 }
