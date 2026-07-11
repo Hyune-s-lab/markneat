@@ -14,6 +14,10 @@
 - Isolate diagram failures and provide local diagnostics.
 - Load Mermaid only when a document needs it, through the shared optional-runtime boundary for future diagram engines.
 
+## 0.2.1 — JCEF Compatibility
+
+- Declare the optional JCEF module required by newer IDE class loaders without excluding 2025.2-based IDEs.
+
 ## 0.3.0 — Appearance
 
 - Add Standard (compact and restrained) and Enhanced (spacious and expressive) rendering profiles.

@@ -31,6 +31,7 @@ TypeScript -> Kotlin: ready | rendered | openLink | error | loadRuntime
 | --- | --- |
 | Host | Kotlin 2.1.20 + IntelliJ Platform Gradle Plugin 2.18.1 |
 | IDE integration | Exclusive, dumb-aware `FileEditorProvider` with a read-only JCEF editor and plain-text fallback |
+| JCEF module boundary | Optional `intellij.libraries.jcef` dependency with a separate descriptor |
 | Compatibility baseline | IntelliJ Platform 2025.2 (`since-build` 252) |
 | Renderer | TypeScript 7.0.2 bundled by Vite 8.1.4 |
 | Markdown | Marked 18.0.6 |

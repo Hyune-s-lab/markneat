@@ -1,33 +1,37 @@
-# ADR-0002: MarkdownNeat Owns Markdown Editor Selection
+# ADR-0002: MarkdownNeat이 Markdown 편집기 선택을 소유한다
 
-- **Status:** Accepted
-- **Date:** 2026-07-11
+- **상태:** 수락됨
+- **날짜:** 2026-07-11
 
-## Context
+## 맥락
 
-JetBrains IDEs can load several `FileEditorProvider` implementations for the same Markdown file.  
-When MarkdownNeat was placed after the default editor, the built-in Markdown preview remained selected while a separate MarkdownNeat tab appeared below it.  
-MarkdownNeat settings then appeared to have no effect because the visible page belonged to a different renderer.
+JetBrains IDE는 하나의 Markdown 파일에 여러 `FileEditorProvider` 구현체를 로드할 수 있다.
 
-Project restoration adds another constraint: providers that are not available during indexing can be omitted while the saved editor is reconstructed.  
-The built-in Markdown editor may then remain active even after MarkdownNeat becomes available.
+MarkdownNeat이 기본 편집기 뒤에 배치되면, 내장 Markdown 미리 보기가 선택된 채 별도의 MarkdownNeat 탭이 아래에 나타났다.
 
-## Decision
+이때 보이는 페이지는 다른 렌더러의 결과이므로 MarkdownNeat 설정이 적용되지 않는 것처럼 보였다.
 
-MarkdownNeat MUST be the exclusive normal editor for `.md` and `.markdown` files while the plugin is enabled.
+프로젝트 복원에도 제약이 있다. 인덱싱 중 사용할 수 없는 provider는 저장된 편집기를 복원할 때 생략될 수 있다.
 
-- Its provider MUST use `HIDE_OTHER_EDITORS`.
-- Its provider MUST be `DumbAware` so the same editor is selected during indexing and project restoration.
-- Appearance settings MUST always address the renderer visible for a supported Markdown file.
+MarkdownNeat을 사용할 수 있게 된 뒤에도 내장 Markdown 편집기가 계속 활성 상태로 남을 수 있다.
 
-## Consequences
+## 결정
 
-- Users do not need to identify which Markdown preview is active.
-- MarkdownNeat behavior is stable during startup and indexing.
-- Other Markdown editors are not presented in the normal editor composite while MarkdownNeat is enabled.
-- Installing MarkdownNeat deliberately favors read-only viewing over editing for supported Markdown files.
-- If another plugin also requests exclusive editor ownership, IntelliJ may retain both providers. This case requires the user to keep only one exclusive viewer enabled.
-- `HIDE_OTHER_EDITORS` is experimental in the 2025.2 and 2025.3 platform APIs. Every supported IDE release MUST remain covered by Plugin Verifier.
+플러그인이 활성화된 동안 MarkdownNeat은 `.md`와 `.markdown` 파일의 유일한 일반 편집기여야 한다.
 
-Keeping MarkdownNeat as a secondary editor was rejected because it made renderer ownership ambiguous.  
-`HIDE_DEFAULT_EDITOR` was also insufficient because it removes only the platform default and does not establish MarkdownNeat as the sole provider among other Markdown plugins.
+- provider는 `HIDE_OTHER_EDITORS`를 사용해야 한다.
+- 인덱싱과 프로젝트 복원에서도 같은 편집기가 선택되도록 provider는 `DumbAware`여야 한다.
+- 모양 설정은 지원하는 Markdown 파일에서 실제로 보이는 렌더러에 항상 적용되어야 한다.
+
+## 결과
+
+- 사용자는 어떤 Markdown 미리 보기가 활성 상태인지 구분할 필요가 없다.
+- 시작과 인덱싱 중에도 MarkdownNeat 동작이 안정적이다.
+- MarkdownNeat이 활성화된 동안 다른 Markdown 편집기는 일반 편집기 조합에 나타나지 않는다.
+- MarkdownNeat 설치는 지원 파일의 편집보다 읽기 전용 보기를 의도적으로 우선한다.
+- 다른 플러그인도 독점 편집기 소유권을 요구하면 IntelliJ가 두 provider를 모두 유지할 수 있다. 이 경우 사용자는 독점 뷰어를 하나만 활성화해야 한다.
+- `HIDE_OTHER_EDITORS`는 2025.2와 2025.3 플랫폼 API에서 실험적이다. 지원하는 모든 IDE 릴리스는 계속 Plugin Verifier로 검사해야 한다.
+
+MarkdownNeat을 보조 편집기로 유지하는 안은 렌더러 소유권을 모호하게 만들므로 기각했다.
+
+`HIDE_DEFAULT_EDITOR`도 플랫폼 기본 편집기만 제거할 뿐 다른 Markdown 플러그인 사이에서 MarkdownNeat을 유일한 provider로 만들지 못하므로 충분하지 않았다.

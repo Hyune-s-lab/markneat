@@ -4,22 +4,20 @@
     <vendor url="https://github.com/Hyune-s-lab">Hyune-s-lab</vendor>
 
     <description><![CDATA[
-        <p>MarkdownNeat is a lightweight, read-only viewer for JetBrains IDEs that renders GitHub Flavored Markdown and Mermaid diagrams offline with themes independent of the IDE.</p>
+        <p>MarkdownNeat is a read-only Markdown viewer for JetBrains IDEs.</p>
+        <p>It renders GitHub Flavored Markdown and Mermaid diagrams offline with Light and Dark themes independent of the IDE.</p>
         <ul>
-            <li>GitHub Flavored Markdown (GFM)</li>
-            <li>Mermaid 11.16.0 in fenced blocks and standalone <code>.mmd</code> and <code>.mermaid</code> files</li>
-            <li>Curated offline Material Design Icons and local diagram diagnostics</li>
-            <li>Light and Dark themes independent of the IDE theme</li>
-            <li>Automatic refresh when files change</li>
-            <li>Relative image and link support</li>
+            <li>GitHub Flavored Markdown and Mermaid diagrams</li>
+            <li>Independent Light and Dark themes</li>
+            <li>Automatic refresh with relative images and links</li>
             <li>Offline rendering with untrusted content sanitization</li>
         </ul>
-        <p>While enabled, MarkdownNeat opens <code>.md</code>, <code>.markdown</code>, <code>.mmd</code>, and <code>.mermaid</code> files in its read-only viewer instead of other file editors.</p>
-        <p>AI and IDE tools can continue to modify the underlying files, and MarkdownNeat refreshes the rendered view automatically.</p>
+        <p>While enabled, MarkdownNeat opens supported Markdown and Mermaid files in its read-only viewer. AI and IDE tools can continue to modify the underlying files.</p>
         <p>See the <a href="https://github.com/Hyune-s-lab/markdown-neat/blob/main/docs/roadmap.md">roadmap</a> for implemented and planned features.</p>
     ]]></description>
 
     <depends>com.intellij.modules.platform</depends>
+    <depends optional="true" config-file="jcef.xml">intellij.libraries.jcef</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <fileEditorProvider implementation="dev.hyunelab.markdownneat.editor.MarkdownNeatFileEditorProvider"/>

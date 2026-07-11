@@ -18,7 +18,7 @@
 
 ## Language
 
-- Public content MUST be written in English, including documentation, UI text, Git history, issues, PRs, and release notes.
+- Public content MUST be written in English, including documentation, UI text, Git history, issues, PRs, and release notes, except accepted decision records.
 - Private discussion with the project owner MAY be written in Korean.
 - Code identifiers and established technical terms SHOULD keep their original names.
 
@@ -27,6 +27,9 @@
 - `README.md` MUST remain a concise product entry point and describe only key product capabilities.
 - `docs/roadmap.md` MUST own versioned release scope and future work.
 - `docs/architecture.md` MUST describe only the current architecture; accepted decisions belong under `docs/decisions/`.
+- Accepted decision records under `docs/decisions/` MUST be written in Korean.
+- Marketplace Overview MUST describe durable product capabilities, not version-specific implementation details.
+- Marketplace What's New MUST summarize only the current release and link to its GitHub Release notes.
 - Detailed status or decisions MUST NOT be duplicated across documents.
 
 ## Release Preparation

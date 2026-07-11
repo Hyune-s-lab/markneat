@@ -117,6 +117,10 @@ intellijPlatform {
         name = "MarkdownNeat"
         version = project.version.toString()
         changeNotes = """
+            <ul>
+              <li>Fix JCEF module loading in newer IDE class loaders.</li>
+              <li>Keep compatibility with 2025.2-based IDEs.</li>
+            </ul>
             <p>See the <a href="https://github.com/Hyune-s-lab/markdown-neat/releases/tag/v${project.version}">GitHub release notes</a>.</p>
         """.trimIndent()
 
