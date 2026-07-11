@@ -4,7 +4,7 @@
     <vendor url="https://github.com/Hyune-s-lab">Hyune-s-lab</vendor>
 
     <description><![CDATA[
-        <p>MarkdownNeat is a lightweight, read-only Markdown viewer for JetBrains IDEs.</p>
+        <p>MarkdownNeat is a lightweight, read-only Markdown viewer for JetBrains IDEs that renders GitHub Flavored Markdown offline with themes independent of the IDE.</p>
         <ul>
             <li>GitHub Flavored Markdown (GFM)</li>
             <li>Light and Dark themes independent of the IDE theme</li>

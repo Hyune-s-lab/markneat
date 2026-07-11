@@ -61,6 +61,14 @@ val prepareRendererResources by tasks.registering(Copy::class) {
         into("META-INF")
         rename { "MARKDOWNNEAT-LICENSE.txt" }
     }
+    from("docs/assets/plugin-icon.svg") {
+        into("META-INF")
+        rename { "pluginIcon.svg" }
+    }
+    from("docs/assets/plugin-icon-dark.svg") {
+        into("META-INF")
+        rename { "pluginIcon_dark.svg" }
+    }
     from("node_modules/marked/LICENSE") {
         into("META-INF/licenses")
         rename { "marked-MIT.txt" }
