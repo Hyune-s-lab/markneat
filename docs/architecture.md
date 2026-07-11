@@ -68,6 +68,7 @@ They isolate MarkdownNeat's TypeScript renderer in Node.js with JSDOM and do not
 - Syntax highlighter
 - Profile, theme, and typography contract
 - Font discovery and fallback behavior
+- Custom CSS isolation and resource policy
 - D2 runtime and syntax convention
 - Excalidraw read-only workflow
 - Initial Iconify packs

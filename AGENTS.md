@@ -24,7 +24,7 @@
 
 ## Documentation
 
-- `README.md` MUST remain a concise product entry point and describe only implemented features.
+- `README.md` MUST remain a concise product entry point and describe only key product capabilities.
 - `docs/roadmap.md` MUST own the feature matrix and future scope.
 - `docs/architecture.md` MUST always describe the current design and open decisions.
 - Accepted architecture decisions MUST be recorded under `docs/decisions/` without turning `docs/architecture.md` into a decision log.
