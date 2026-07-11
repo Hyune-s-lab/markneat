@@ -29,6 +29,9 @@
 - `docs/architecture.md` MUST always describe the current design and open decisions.
 - Accepted architecture decisions MUST be recorded under `docs/decisions/` without turning `docs/architecture.md` into a decision log.
 - GitHub Releases MUST own published release notes and version history.
+- GitHub Release titles MUST use the `v<version>` form, such as `v0.1.0`.
+- Release notes MUST group changes by change type, using Spring Boot-style emoji headings such as `:star: New Features`, `:lady_beetle: Bug Fixes`, `:notebook_with_decorative_cover: Documentation`, and `:hammer: Dependency Upgrades`.
+- All feature changes in one release MUST share a single `:star: New Features` section; split sections only when the change type differs.
 - Detailed status or decisions MUST NOT be duplicated across documents.
 
 ## Verification

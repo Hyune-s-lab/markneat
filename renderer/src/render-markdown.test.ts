@@ -5,9 +5,10 @@ import { renderMarkdown } from "./render-markdown";
 describe("renderMarkdown", () => {
   it("renders GitHub-flavored task lists", () => {
     const result = renderMarkdown({
-      version: 1,
+      version: 2,
       source: "# Tasks\n\n- [x] Render Markdown",
       baseUrl: "file:///project/docs/guide.md",
+      documentType: "markdown",
       theme: "light",
     });
 
@@ -18,7 +19,7 @@ describe("renderMarkdown", () => {
 
   it("removes executable and interactive content", () => {
     const result = renderMarkdown({
-      version: 1,
+      version: 2,
       source: [
         '<script>alert("no")</script>',
         '<div style="position: fixed" onclick="alert(1)">content</div>',
@@ -26,6 +27,7 @@ describe("renderMarkdown", () => {
         '<a href="javascript:alert(1)">unsafe</a>',
       ].join("\n"),
       baseUrl: "file:///project/unsafe.md",
+      documentType: "markdown",
       theme: "dark",
     });
 
@@ -37,9 +39,10 @@ describe("renderMarkdown", () => {
 
   it("creates stable GitHub-style anchors for headings", () => {
     const result = renderMarkdown({
-      version: 1,
+      version: 2,
       source: "## Hello, MarkdownNeat!\n\n## Hello, MarkdownNeat!",
       baseUrl: "file:///project/readme.md",
+      documentType: "markdown",
       theme: "light",
     });
 

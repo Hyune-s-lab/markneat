@@ -35,6 +35,42 @@ body {
   pointer-events: none;
 }
 
+.markdown-neat-diagram {
+  overflow-x: auto;
+  margin: 24px 0;
+  text-align: center;
+}
+
+.markdown-neat-diagram svg {
+  display: inline-block;
+  max-width: 100%;
+  height: auto;
+}
+
+.markdown-neat-diagram-error {
+  padding: 16px;
+  border-left: 4px solid #cf222e;
+  color: #cf222e;
+  text-align: left;
+}
+
+:root[data-theme="dark"] .markdown-neat-diagram-error {
+  border-left-color: #ff7b72;
+  color: #ff7b72;
+}
+
+.markdown-neat-diagram-error strong,
+.markdown-neat-diagram-error span {
+  display: block;
+}
+
+.markdown-neat-diagram-error pre {
+  overflow-x: auto;
+  margin-bottom: 0;
+  color: inherit;
+  white-space: pre;
+}
+
 .markdown-neat-error {
   color: #cf222e;
   white-space: pre-wrap;

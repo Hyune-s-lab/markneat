@@ -26,6 +26,7 @@ import org.cef.browser.CefFrame
 import org.cef.handler.CefLoadHandlerAdapter
 import java.beans.PropertyChangeListener
 import java.net.URI
+import java.util.concurrent.ConcurrentHashMap
 import javax.swing.JComponent
 
 internal class MarkdownNeatJcefFileEditor(
@@ -35,6 +36,7 @@ internal class MarkdownNeatJcefFileEditor(
     private val document = requireNotNull(FileDocumentManager.getInstance().getDocument(file))
     private val browser = JBCefBrowser()
     private val readyQuery = JBCefJSQuery.create(browser as JBCefBrowserBase)
+    private val loadRuntimeQuery = JBCefJSQuery.create(browser as JBCefBrowserBase)
     private val openLinkQuery = JBCefJSQuery.create(browser as JBCefBrowserBase)
     private val renderedQuery = JBCefJSQuery.create(browser as JBCefBrowserBase)
     private val errorQuery = JBCefJSQuery.create(browser as JBCefBrowserBase)
@@ -43,6 +45,7 @@ internal class MarkdownNeatJcefFileEditor(
     init {
         Disposer.register(this, browser)
         Disposer.register(this, readyQuery)
+        Disposer.register(this, loadRuntimeQuery)
         Disposer.register(this, openLinkQuery)
         Disposer.register(this, renderedQuery)
         Disposer.register(this, errorQuery)
@@ -52,6 +55,14 @@ internal class MarkdownNeatJcefFileEditor(
                 if (isValid) {
                     rendererReady = true
                     render()
+                }
+            }
+            JBCefJSQuery.Response(null)
+        }
+        loadRuntimeQuery.addHandler { runtimeName ->
+            ApplicationManager.getApplication().invokeLater {
+                if (isValid) {
+                    loadRuntime(runtimeName)
                 }
             }
             JBCefJSQuery.Response(null)
@@ -111,6 +122,7 @@ internal class MarkdownNeatJcefFileEditor(
         val script = """
             window.markdownNeat.connect({
               ready: function() { ${readyQuery.inject("'ready'")} },
+              loadRuntime: function(name) { ${loadRuntimeQuery.inject("name")} },
               openLink: function(href) { ${openLinkQuery.inject("href")} },
               rendered: function() { ${renderedQuery.inject("'rendered'")} },
               error: function(message) { ${errorQuery.inject("message")} }
@@ -124,10 +136,48 @@ internal class MarkdownNeatJcefFileEditor(
             return
         }
         val theme = MarkdownNeatSettings.getInstance().theme.wireValue
+        val documentType = if (file.extension?.lowercase() in MERMAID_EXTENSIONS) "mermaid" else "markdown"
         val request = """
-            {"version":1,"source":${document.text.toJsonString()},"baseUrl":${file.url.toJsonString()},"theme":"$theme"}
+            {"version":2,"source":${document.text.toJsonString()},"baseUrl":${file.url.toJsonString()},"documentType":"$documentType","theme":"$theme"}
         """.trimIndent()
         browser.cefBrowser.executeJavaScript("window.markdownNeat.render($request);", file.url, 0)
+    }
+
+    private fun loadRuntime(runtimeName: String) {
+        if (!RUNTIME_NAME.matches(runtimeName)) {
+            notifyRuntimeFailure(runtimeName, "Unsupported runtime name")
+            return
+        }
+        val runtime = runCatching {
+            RUNTIMES.computeIfAbsent(runtimeName) { name ->
+                checkNotNull(
+                    MarkdownNeatJcefFileEditor::class.java.getResource("/markdownneat/runtime-$name.js"),
+                ) { "Missing bundled runtime: $name" }.readText()
+            }
+        }.getOrElse { error ->
+            notifyRuntimeFailure(runtimeName, error.message ?: "Missing bundled runtime")
+            return
+        }
+        val script = """
+            try {
+              $runtime
+              window.markdownNeat.runtimeReady(${runtimeName.toJsonString()});
+            } catch (error) {
+              window.markdownNeat.runtimeFailed(
+                ${runtimeName.toJsonString()},
+                String(error && error.message ? error.message : error)
+              );
+            }
+        """.trimIndent()
+        browser.cefBrowser.executeJavaScript(script, file.url, 0)
+    }
+
+    private fun notifyRuntimeFailure(runtimeName: String, message: String) {
+        browser.cefBrowser.executeJavaScript(
+            "window.markdownNeat.runtimeFailed(${runtimeName.toJsonString()}, ${message.toJsonString()});",
+            file.url,
+            0,
+        )
     }
 
     private fun scheduleThemeRender() {
@@ -154,5 +204,8 @@ internal class MarkdownNeatJcefFileEditor(
 
     private companion object {
         val LOG = Logger.getInstance(MarkdownNeatJcefFileEditor::class.java)
+        val MERMAID_EXTENSIONS = setOf("mermaid", "mmd")
+        val RUNTIME_NAME = Regex("[a-z0-9-]+")
+        val RUNTIMES = ConcurrentHashMap<String, String>()
     }
 }

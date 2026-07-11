@@ -50,12 +50,37 @@ val buildRenderer by tasks.registering(Exec::class) {
     commandLine("npm", "run", "build:renderer")
 }
 
+val buildMermaidRuntime by tasks.registering(Exec::class) {
+    dependsOn(npmInstall)
+    inputs.files("package.json", "package-lock.json", "scripts/build-mermaid-runtime.mjs")
+    outputs.file(layout.buildDirectory.file("generated/mermaid/runtime-mermaid.js"))
+    commandLine("npm", "run", "build:mermaid-runtime")
+}
+
+val buildRuntimeLicenses by tasks.registering(Exec::class) {
+    dependsOn(npmInstall)
+    inputs.files("package-lock.json", "scripts/build-runtime-licenses.mjs")
+    inputs.dir("licenses")
+    outputs.file(layout.buildDirectory.file("generated/licenses/NPM-RUNTIME-LICENSES.txt"))
+    commandLine("npm", "run", "build:runtime-licenses")
+}
+
+val testMermaidRuntime by tasks.registering(Exec::class) {
+    dependsOn(buildMermaidRuntime, npmInstall)
+    inputs.files("scripts/test-mermaid-runtime.mjs")
+    inputs.file(layout.buildDirectory.file("generated/mermaid/runtime-mermaid.js"))
+    commandLine("npm", "run", "test:mermaid-runtime")
+}
+
 val prepareRendererResources by tasks.registering(Copy::class) {
-    dependsOn(buildRenderer, npmInstall)
+    dependsOn(buildMermaidRuntime, buildRenderer, buildRuntimeLicenses, npmInstall)
     into(layout.buildDirectory.dir("generated/rendererResources"))
     from(layout.buildDirectory.file("generated/renderer/index.html")) {
         into("markdownneat")
         rename { "viewer.html" }
+    }
+    from(layout.buildDirectory.file("generated/mermaid/runtime-mermaid.js")) {
+        into("markdownneat")
     }
     from("LICENSE") {
         into("META-INF")
@@ -69,17 +94,8 @@ val prepareRendererResources by tasks.registering(Copy::class) {
         into("META-INF")
         rename { "pluginIcon_dark.svg" }
     }
-    from("node_modules/marked/LICENSE") {
+    from(layout.buildDirectory.file("generated/licenses/NPM-RUNTIME-LICENSES.txt")) {
         into("META-INF/licenses")
-        rename { "marked-MIT.txt" }
-    }
-    from("node_modules/dompurify/LICENSE") {
-        into("META-INF/licenses")
-        rename { "DOMPurify-Apache-2.0.txt" }
-    }
-    from("node_modules/github-markdown-css/license") {
-        into("META-INF/licenses")
-        rename { "github-markdown-css-MIT.txt" }
     }
 }
 
@@ -92,7 +108,7 @@ tasks.processResources {
 }
 
 tasks.check {
-    dependsOn(testRenderer, typecheckRenderer)
+    dependsOn(testMermaidRuntime, testRenderer, typecheckRenderer)
 }
 
 intellijPlatform {
@@ -101,7 +117,7 @@ intellijPlatform {
         name = "MarkdownNeat"
         version = project.version.toString()
         changeNotes = """
-            <p>See the <a href="https://github.com/Hyune-s-lab/markdown-neat/releases/tag/${project.version}">GitHub release notes</a>.</p>
+            <p>See the <a href="https://github.com/Hyune-s-lab/markdown-neat/releases/tag/v${project.version}">GitHub release notes</a>.</p>
         """.trimIndent()
 
         ideaVersion {

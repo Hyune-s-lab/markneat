@@ -2,10 +2,14 @@ import darkTheme from "github-markdown-css/github-markdown-dark.css?inline";
 import lightTheme from "github-markdown-css/github-markdown-light.css?inline";
 
 import "./viewer.css";
-import { renderMarkdown, type RenderRequest } from "./render-markdown";
+import { loadRuntime, runtimeFailed, runtimeReady } from "./load-runtime";
+import { renderDocument } from "./render-document";
+import { renderMermaidDiagrams } from "./render-mermaid";
+import type { RenderRequest } from "./render-request";
 
 interface MarkdownNeatHost {
   error(message: string): void;
+  loadRuntime(name: string): void;
   openLink(href: string): void;
   ready(): void;
   rendered(): void;
@@ -14,6 +18,8 @@ interface MarkdownNeatHost {
 interface MarkdownNeatBridge {
   connect(host: MarkdownNeatHost): void;
   render(request: RenderRequest): void;
+  runtimeFailed(name: string, message: string): void;
+  runtimeReady(name: string): void;
 }
 
 declare global {
@@ -30,11 +36,18 @@ document.head.append(themeStyle);
 let host: MarkdownNeatHost | undefined;
 let pendingRequest: RenderRequest | undefined;
 let renderTimer: number | undefined;
+let renderGeneration = 0;
 
 window.markdownNeat = {
   connect(nextHost) {
     host = nextHost;
     host.ready();
+  },
+  runtimeFailed(name, message) {
+    runtimeFailed(name, message);
+  },
+  runtimeReady(name) {
+    runtimeReady(name);
   },
   render(request) {
     pendingRequest = request;
@@ -53,15 +66,38 @@ function flushRender(): void {
     return;
   }
 
+  const generation = ++renderGeneration;
+  void renderRequest(request, generation);
+}
+
+async function renderRequest(request: RenderRequest, generation: number): Promise<void> {
   try {
     const scrollTop = document.documentElement.scrollTop;
     themeStyle.textContent = request.theme === "dark" ? darkTheme : lightTheme;
     document.documentElement.dataset.theme = request.theme;
     viewer.classList.remove("markdown-neat-error");
-    viewer.innerHTML = renderMarkdown(request).html;
+    viewer.innerHTML = renderDocument(request).html;
+    await renderMermaidDiagrams(
+      viewer,
+      request.theme,
+      () =>
+        loadRuntime("mermaid", (name) => {
+          if (host === undefined) {
+            throw new Error("MarkdownNeat host is not connected");
+          }
+          host.loadRuntime(name);
+        }),
+      (message) => host?.error(message),
+    );
+    if (generation !== renderGeneration) {
+      return;
+    }
     document.documentElement.scrollTop = scrollTop;
     host?.rendered();
   } catch (error) {
+    if (generation !== renderGeneration) {
+      return;
+    }
     const message = error instanceof Error ? error.message : String(error);
     viewer.textContent = `Unable to render this document: ${message}`;
     viewer.classList.add("markdown-neat-error");
