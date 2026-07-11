@@ -30,7 +30,7 @@ MarkdownNeat을 사용할 수 있게 된 뒤에도 내장 Markdown 편집기가 
 - MarkdownNeat이 활성화된 동안 다른 Markdown 편집기는 일반 편집기 조합에 나타나지 않는다.
 - MarkdownNeat 설치는 지원 파일의 편집보다 읽기 전용 보기를 의도적으로 우선한다.
 - 다른 플러그인도 독점 편집기 소유권을 요구하면 IntelliJ가 두 provider를 모두 유지할 수 있다. 이 경우 사용자는 독점 뷰어를 하나만 활성화해야 한다.
-- `HIDE_OTHER_EDITORS`는 2025.2와 2025.3 플랫폼 API에서 실험적이다. 지원하는 모든 IDE 릴리스는 계속 Plugin Verifier로 검사해야 한다.
+- `HIDE_OTHER_EDITORS`는 이전 플랫폼에서 실험적이었지만, MarkdownNeat의 지원 하한인 2026.1부터는 안정 API다.
 
 MarkdownNeat을 보조 편집기로 유지하는 안은 렌더러 소유권을 모호하게 만들므로 기각했다.
 

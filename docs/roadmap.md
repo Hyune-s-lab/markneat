@@ -16,7 +16,12 @@
 
 ## 0.2.1 — JCEF Compatibility
 
-- Declare the optional JCEF module required by newer IDE class loaders without excluding 2025.2-based IDEs.
+- Add explicit JCEF dependency metadata for newer IDE class loaders.
+
+## 0.2.2 — JCEF Runtime Compatibility
+
+- Correct the optional JCEF dependency for the modular runtime used by IntelliJ Platform 2026.2.
+- Set IntelliJ Platform 2026.1 as the compatibility baseline, where the exclusive viewer policy is stable.
 
 ## 0.3.0 — Appearance
 

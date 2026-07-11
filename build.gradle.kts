@@ -13,7 +13,7 @@ dependencies {
     testImplementation(kotlin("test"))
 
     intellijPlatform {
-        intellijIdea("2025.2.6.2")
+        intellijIdea("2026.1.4")
         testFramework(TestFrameworkType.Platform)
     }
 }
@@ -118,14 +118,14 @@ intellijPlatform {
         version = project.version.toString()
         changeNotes = """
             <ul>
-              <li>Fix JCEF module loading in newer IDE class loaders.</li>
-              <li>Keep compatibility with 2025.2-based IDEs.</li>
+              <li>Fix JCEF class loading in IntelliJ Platform 2026.2.</li>
+              <li>Use IntelliJ Platform 2026.1 as the compatibility baseline.</li>
             </ul>
             <p>See the <a href="https://github.com/Hyune-s-lab/markdown-neat/releases/tag/v${project.version}">GitHub release notes</a>.</p>
         """.trimIndent()
 
         ideaVersion {
-            sinceBuild = "252"
+            sinceBuild = "261"
         }
 
         vendor {
@@ -136,7 +136,7 @@ intellijPlatform {
 
     pluginVerification {
         ides {
-            create(IntelliJPlatformType.IntellijIdeaUltimate, "2025.2")
+            create(IntelliJPlatformType.IntellijIdeaUltimate, "2026.1.4")
             latest {
                 types = listOf(IntelliJPlatformType.IntellijIdeaUltimate)
                 channels = listOf(ProductRelease.Channel.RELEASE)
