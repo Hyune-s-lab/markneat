@@ -1,19 +1,22 @@
-# MarkNeat
+# MarkdownNeat
 
-> A lightweight, read-only Markdown viewer for JetBrains IDEs.
+> A lightweight, read-only Markdown viewer for JetBrains IDEs.  
+> AI and IDE tools edit plain Markdown; MarkdownNeat renders it for reading.
 
-## Principles
+## Key Features
 
-- Read-only and lightweight by design
-- Built-in diagram rendering, starting with Mermaid
-- Standard and Enhanced profiles, bundled themes, and adjustable typography
-- Offline core rendering with safe handling of untrusted content
+- **Themes** — GitHub Light and GitHub Dark today, with more bundled themes planned
+- **Architecture diagrams** — planned support for modern diagram DSLs, beginning with Mermaid
+- **Typography** — planned control over body and code fonts
+- **Lightweight viewing** — read-only, offline-first rendering without editing or background indexing
 
 ## Documentation
 
-- [Roadmap](docs/roadmap.md) — releases and future scope
+- [Roadmap](docs/roadmap.md) — implemented and planned features
 - [Architecture](docs/architecture.md) — current design and open decisions
 
 ## License
 
-[MIT](LICENSE)
+MarkdownNeat is licensed under [MIT](LICENSE).  
+Bundled runtime licenses: [Marked](https://github.com/markedjs/marked) (MIT), [DOMPurify](https://github.com/cure53/DOMPurify) (Apache 2.0), and [github-markdown-css](https://github.com/sindresorhus/github-markdown-css) (MIT).  
+Complete dependency license texts are included in the plugin distribution.

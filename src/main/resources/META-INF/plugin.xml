@@ -1,0 +1,31 @@
+<idea-plugin url="https://github.com/Hyune-s-lab/markdown-neat">
+    <id>dev.hyunelab.markdownneat</id>
+    <name>MarkdownNeat</name>
+    <vendor url="https://github.com/Hyune-s-lab">Hyune-s-lab</vendor>
+
+    <description><![CDATA[
+        <p>MarkdownNeat is a lightweight, read-only Markdown viewer for JetBrains IDEs that renders GitHub Flavored Markdown offline with themes independent of the IDE.</p>
+        <ul>
+            <li>GitHub Flavored Markdown (GFM)</li>
+            <li>Light and Dark themes independent of the IDE theme</li>
+            <li>Automatic refresh when files change</li>
+            <li>Relative image and link support</li>
+            <li>Offline rendering with untrusted content sanitization</li>
+        </ul>
+        <p>While enabled, MarkdownNeat opens <code>.md</code> and <code>.markdown</code> files in its read-only viewer instead of other file editors.</p>
+        <p>AI and IDE tools can continue to modify the underlying files, and MarkdownNeat refreshes the rendered view automatically.</p>
+        <p>See the <a href="https://github.com/Hyune-s-lab/markdown-neat/blob/main/docs/roadmap.md">roadmap</a> for implemented and planned features.</p>
+    ]]></description>
+
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <fileEditorProvider implementation="dev.hyunelab.markdownneat.editor.MarkdownNeatFileEditorProvider"/>
+        <applicationService serviceImplementation="dev.hyunelab.markdownneat.settings.MarkdownNeatSettings"/>
+        <applicationConfigurable
+                parentId="tools"
+                id="dev.hyunelab.markdownneat.settings"
+                displayName="MarkdownNeat"
+                instance="dev.hyunelab.markdownneat.settings.MarkdownNeatSettingsConfigurable"/>
+    </extensions>
+</idea-plugin>

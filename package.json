@@ -1,0 +1,29 @@
+{
+  "name": "markdown-neat",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "build:renderer": "vite build",
+    "inspect:jcef-theme": "node scripts/inspect-jcef-theme.mjs",
+    "measure:renderer": "node --expose-gc scripts/measure-renderer.mjs",
+    "test:renderer": "vitest run",
+    "typecheck:renderer": "tsc --noEmit"
+  },
+  "dependencies": {
+    "dompurify": "3.4.11",
+    "github-markdown-css": "5.9.0",
+    "marked": "18.0.6"
+  },
+  "devDependencies": {
+    "@types/node": "26.1.1",
+    "jsdom": "29.1.1",
+    "typescript": "7.0.2",
+    "vite": "8.1.4",
+    "vite-plugin-singlefile": "2.3.3",
+    "vitest": "4.1.10"
+  }
+}
