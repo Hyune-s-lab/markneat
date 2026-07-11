@@ -2,6 +2,11 @@
 
 > A lightweight, read-only Markdown viewer for JetBrains IDEs.
 
+## Philosophy
+
+MarkdownNeat is deliberately a viewer, not an editor.  
+Let AI or another tool write Markdown; use MarkdownNeat to read the rendered result in the IDE.
+
 ## Principles
 
 - Read-only and lightweight by design
