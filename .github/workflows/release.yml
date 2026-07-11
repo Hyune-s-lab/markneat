@@ -1,0 +1,59 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Draft GitHub Release tag to build and verify
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  verify-draft-release:
+    name: Verify and attach plugin ZIP
+    runs-on: ubuntu-latest
+    steps:
+      - name: Resolve release tag
+        id: release
+        env:
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: |
+          echo "tag=$RELEASE_TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Confirm release is a draft
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ steps.release.outputs.tag }}
+        run: test "$(gh release view "$RELEASE_TAG" --json isDraft --jq .isDraft)" = true
+
+      - name: Check out release
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ steps.release.outputs.tag }}
+
+      - name: Set up Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v6
+
+      - name: Verify release
+        run: ./gradlew verifyRelease
+
+      - name: Attach plugin distribution
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ steps.release.outputs.tag }}
+        run: gh release upload "$RELEASE_TAG" build/distributions/*.zip --clobber

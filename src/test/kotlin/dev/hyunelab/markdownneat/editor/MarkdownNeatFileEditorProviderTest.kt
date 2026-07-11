@@ -12,6 +12,8 @@ class MarkdownNeatFileEditorProviderTest : BasePlatformTestCase() {
 
         assertTrue(provider.accept(project, LightVirtualFile("README.md", PlainTextLanguage.INSTANCE, "# MarkdownNeat")))
         assertTrue(provider.accept(project, LightVirtualFile("guide.markdown", PlainTextLanguage.INSTANCE, "# Guide")))
+        assertTrue(provider.accept(project, LightVirtualFile("system.mmd", PlainTextLanguage.INSTANCE, "flowchart LR")))
+        assertTrue(provider.accept(project, LightVirtualFile("system.mermaid", PlainTextLanguage.INSTANCE, "flowchart LR")))
         assertFalse(provider.accept(project, LightVirtualFile("notes.txt", PlainTextLanguage.INSTANCE, "notes")))
         assertEquals(FileEditorPolicy.HIDE_OTHER_EDITORS, provider.policy)
         assertTrue((provider as Any) is DumbAware)

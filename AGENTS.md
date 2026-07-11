@@ -25,18 +25,31 @@
 ## Documentation
 
 - `README.md` MUST remain a concise product entry point and describe only key product capabilities.
-- `docs/roadmap.md` MUST own the feature matrix and future scope.
-- `docs/architecture.md` MUST always describe the current design and open decisions.
-- Accepted architecture decisions MUST be recorded under `docs/decisions/` without turning `docs/architecture.md` into a decision log.
-- GitHub Releases MUST own published release notes and version history.
+- `docs/roadmap.md` MUST own versioned release scope and future work.
+- `docs/architecture.md` MUST describe only the current architecture; accepted decisions belong under `docs/decisions/`.
 - Detailed status or decisions MUST NOT be duplicated across documents.
+
+## Release Preparation
+
+- GitHub Releases MUST own published release notes and version history.
+- GitHub Release titles MUST use the `v<version>` form, such as `v0.1.0`.
+- Release notes MUST group changes by change type, using Spring Boot-style emoji headings such as `:star: New Features`, `:lady_beetle: Bug Fixes`, `:notebook_with_decorative_cover: Documentation`, and `:hammer: Dependency Upgrades`.
+- All feature changes in one release MUST share a single `:star: New Features` section; split sections only when the change type differs.
+- Every GitHub Release MUST begin as a draft.
+- The release workflow MUST build the draft's `v<version>` tag, pass `verifyRelease`, and attach the resulting plugin ZIP before the draft is published.
+
+## Publishing
+
+- A GitHub Release draft MUST be published only after its release workflow succeeds.
+- The first JetBrains Marketplace listing MUST be created through the Marketplace UI.
+- Marketplace uploads MAY be automated only after the first manual Marketplace listing and signing credentials are configured; JetBrains approval remains manual.
 
 ## Verification
 
 - Changes SHOULD be small, runnable, and tested at the closest useful level.
+- Pull request CI MUST run fast tests and package validation; the two-IDE Plugin Verifier is reserved for the release workflow.
 - Renderer tests SHOULD cover valid input, invalid diagrams, and unsafe content.
 - Changes affecting lightweight behavior MUST measure the relevant size, startup, or memory impact.
-- Releases MUST pass `./gradlew verifyRelease` locally and in CI.
 - Manual smoke testing MUST cover only behavior that automation cannot verify.
 - Reports MUST list only checks that were actually run and MUST disclose remaining risk.
 
@@ -45,7 +58,6 @@
 - Work MUST happen on a focused branch and reach `main` through a pull request.
 - Pull requests MUST be opened ready for review, MUST NOT be drafts, and MUST assign `Hyune-c`.
 - AI agents MUST NOT merge pull requests. Only the project owner may merge.
-- The first JetBrains Marketplace listing MUST be created through the Marketplace UI.
 - Unrelated changes MUST NOT be mixed in one commit.
 - Generated output, IDE caches, and local environment files MUST NOT be committed.
 - Commit, push, PR creation, and publishing MUST NOT happen without the project owner's explicit request.

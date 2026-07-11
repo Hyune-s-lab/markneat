@@ -24,6 +24,6 @@ class MarkdownNeatFileEditorProvider : FileEditorProvider, DumbAware {
     override fun getPolicy(): FileEditorPolicy = FileEditorPolicy.HIDE_OTHER_EDITORS
 
     private companion object {
-        val MARKDOWN_EXTENSIONS = setOf("md", "markdown")
+        val MARKDOWN_EXTENSIONS = setOf("md", "markdown", "mermaid", "mmd")
     }
 }

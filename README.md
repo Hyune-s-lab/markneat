@@ -6,7 +6,7 @@
 ## Key Features
 
 - **Themes** — GitHub Light and GitHub Dark today, with more bundled themes planned
-- **Architecture diagrams** — planned support for modern diagram DSLs, beginning with Mermaid
+- **Architecture diagrams** — Mermaid 11.16.0 in Markdown and standalone files, with more diagram DSLs planned
 - **Typography** — planned control over body and code fonts
 - **Lightweight viewing** — read-only, offline-first rendering without editing or background indexing
 
@@ -18,5 +18,5 @@
 ## License
 
 MarkdownNeat is licensed under [MIT](LICENSE).  
-Bundled runtime licenses: [Marked](https://github.com/markedjs/marked) (MIT), [DOMPurify](https://github.com/cure53/DOMPurify) (Apache 2.0), and [github-markdown-css](https://github.com/sindresorhus/github-markdown-css) (MIT).  
+Bundled runtime licenses: [Marked](https://github.com/markedjs/marked) (MIT), [DOMPurify](https://github.com/cure53/DOMPurify) (Apache 2.0), [github-markdown-css](https://github.com/sindresorhus/github-markdown-css) (MIT), [Mermaid](https://github.com/mermaid-js/mermaid) (MIT), and [Material Design Icons](https://github.com/Templarian/MaterialDesign) (Apache 2.0).<br>
 Complete dependency license texts are included in the plugin distribution.

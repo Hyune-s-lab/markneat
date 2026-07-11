@@ -31,8 +31,8 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v6
 
-      - name: Verify release
-        run: ./gradlew verifyRelease
+      - name: Check and build plugin
+        run: ./gradlew check buildPlugin verifyPluginProjectConfiguration verifyPluginStructure
 
       - name: Upload plugin distribution
         uses: actions/upload-artifact@v7

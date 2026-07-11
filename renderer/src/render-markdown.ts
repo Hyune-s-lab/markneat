@@ -1,12 +1,7 @@
 import DOMPurify from "dompurify";
 import { marked } from "marked";
 
-export interface RenderRequest {
-  version: 1;
-  source: string;
-  baseUrl: string;
-  theme: "light" | "dark";
-}
+import type { RenderRequest } from "./render-request";
 
 export interface RenderResult {
   html: string;
