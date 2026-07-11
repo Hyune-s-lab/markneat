@@ -32,9 +32,7 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v6
         with:
-          cache-read-only: true
-          gradle-home-cache-excludes: |
-            caches/transforms-*
+          cache-disabled: true
 
       - name: Check and build plugin
         run: ./gradlew check buildPlugin verifyPluginProjectConfiguration verifyPluginStructure
