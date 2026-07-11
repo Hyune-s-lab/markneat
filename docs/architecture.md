@@ -29,7 +29,7 @@ TypeScript -> Kotlin: ready | rendered | openLink | error
 | Area | Choice |
 | --- | --- |
 | Host | Kotlin 2.1.20 + IntelliJ Platform Gradle Plugin 2.18.1 |
-| IDE integration | `FileEditorProvider` with a read-only JCEF editor and plain-text fallback |
+| IDE integration | Exclusive, dumb-aware `FileEditorProvider` with a read-only JCEF editor and plain-text fallback |
 | Compatibility baseline | IntelliJ Platform 2025.2 (`since-build` 252) |
 | Renderer | TypeScript 7.0.2 bundled by Vite 8.1.4 |
 | Markdown | Marked 18.0.6 |
@@ -51,6 +51,7 @@ TypeScript -> Kotlin: ready | rendered | openLink | error
 ## Constraints
 
 - Core rendering MUST work offline.
+- MarkNeat MUST own the normal editor for supported Markdown files while enabled.
 - Content MUST be sanitized and MUST NOT write to the project.
 - Renderer resources MUST be lazy-loaded and disposed with the viewer.
 - Diagram failures MUST remain local to their block.

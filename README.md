@@ -13,6 +13,7 @@
 
 - [Roadmap](docs/roadmap.md) — releases and future scope
 - [Architecture](docs/architecture.md) — current design and open decisions
+- [Compatibility](docs/compatibility.md) — Markdown editor ownership and conflict reporting
 
 ## License
 
