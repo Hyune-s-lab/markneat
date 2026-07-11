@@ -40,6 +40,7 @@
 - All feature changes in one release MUST share a single `:star: New Features` section; split sections only when the change type differs.
 - Every GitHub Release MUST begin as a draft.
 - The release workflow MUST build the draft's `v<version>` tag, run fast package validation, attach the resulting plugin ZIP, and upload the same ZIP to JetBrains Marketplace before the draft is published.
+- When the project owner asks to create a release draft, the agent MUST create the draft, immediately dispatch its release workflow, and report only after that workflow completes.
 
 ## Publishing
 
