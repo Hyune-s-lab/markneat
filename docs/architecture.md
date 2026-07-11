@@ -81,4 +81,3 @@ They isolate MarkdownNeat's TypeScript renderer in Node.js with JSDOM and do not
 - Excalidraw read-only workflow
 - Initial Iconify packs
 - Render diagnostic interface and AI usage guide format
-- Marketplace identity and logo

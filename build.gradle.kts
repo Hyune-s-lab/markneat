@@ -1,6 +1,8 @@
 import org.gradle.api.tasks.Copy
 import org.gradle.api.tasks.Exec
+import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
+import org.jetbrains.intellij.platform.gradle.models.ProductRelease
 
 plugins {
     id("org.jetbrains.kotlin.jvm")
@@ -90,10 +92,8 @@ intellijPlatform {
         id = "dev.hyunelab.markdownneat"
         name = "MarkdownNeat"
         version = project.version.toString()
-
-        description = """
-            <p>A lightweight, read-only Markdown viewer for JetBrains IDEs.</p>
-            <p>MarkdownNeat renders GitHub-style Markdown locally in a focused preview.</p>
+        changeNotes = """
+            <p>See the <a href="https://github.com/Hyune-s-lab/markdown-neat/releases/tag/${project.version}">GitHub release notes</a>.</p>
         """.trimIndent()
 
         ideaVersion {
@@ -105,4 +105,26 @@ intellijPlatform {
             url = "https://github.com/Hyune-s-lab"
         }
     }
+
+    pluginVerification {
+        ides {
+            create(IntelliJPlatformType.IntellijIdeaUltimate, "2025.2")
+            latest {
+                types = listOf(IntelliJPlatformType.IntellijIdeaUltimate)
+                channels = listOf(ProductRelease.Channel.RELEASE)
+            }
+        }
+    }
+}
+
+tasks.register("verifyRelease") {
+    group = "verification"
+    description = "Builds and verifies the Marketplace distribution."
+    dependsOn(
+        tasks.check,
+        tasks.buildPlugin,
+        tasks.verifyPluginProjectConfiguration,
+        tasks.verifyPluginStructure,
+        tasks.verifyPlugin,
+    )
 }

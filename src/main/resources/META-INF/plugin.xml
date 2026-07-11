@@ -1,10 +1,19 @@
-<idea-plugin>
+<idea-plugin url="https://github.com/Hyune-s-lab/markdown-neat">
     <id>dev.hyunelab.markdownneat</id>
     <name>MarkdownNeat</name>
     <vendor url="https://github.com/Hyune-s-lab">Hyune-s-lab</vendor>
 
     <description><![CDATA[
-        <p>A lightweight, read-only Markdown viewer for JetBrains IDEs.</p>
+        <p>MarkdownNeat is a lightweight, read-only Markdown viewer for JetBrains IDEs.</p>
+        <ul>
+            <li>GitHub-style Markdown rendering</li>
+            <li>Light and Dark themes independent of the IDE theme</li>
+            <li>Automatic refresh when files change</li>
+            <li>Relative image and link support</li>
+            <li>Offline rendering with untrusted content sanitization</li>
+        </ul>
+        <p>While enabled, MarkdownNeat opens <code>.md</code> and <code>.markdown</code> files in its read-only viewer instead of other file editors.</p>
+        <p>AI and IDE tools can continue to modify the underlying files, and MarkdownNeat refreshes the rendered view automatically.</p>
     ]]></description>
 
     <depends>com.intellij.modules.platform</depends>
