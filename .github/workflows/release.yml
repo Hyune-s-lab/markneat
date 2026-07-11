@@ -1,12 +1,10 @@
 name: Release
 
 on:
-  release:
-    types: [published]
   workflow_dispatch:
     inputs:
       tag:
-        description: Existing GitHub Release tag to build and update
+        description: Draft GitHub Release tag to build and verify
         required: true
         type: string
 
@@ -14,19 +12,22 @@ permissions:
   contents: write
 
 jobs:
-  attach-plugin-distribution:
-    name: Build and attach plugin ZIP
+  verify-draft-release:
+    name: Verify and attach plugin ZIP
     runs-on: ubuntu-latest
     steps:
       - name: Resolve release tag
         id: release
         env:
-          RELEASE_TAG: ${{ github.event.release.tag_name }}
-          INPUT_TAG: ${{ inputs.tag }}
+          RELEASE_TAG: ${{ inputs.tag }}
         run: |
-          tag="${RELEASE_TAG:-$INPUT_TAG}"
-          test -n "$tag"
-          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "tag=$RELEASE_TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Confirm release is a draft
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ steps.release.outputs.tag }}
+        run: test "$(gh release view "$RELEASE_TAG" --json isDraft --jq .isDraft)" = true
 
       - name: Check out release
         uses: actions/checkout@v7
