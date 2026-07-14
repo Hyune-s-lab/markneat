@@ -47,4 +47,32 @@ describe("renderMermaidDiagrams", () => {
     expect(root.textContent).toContain("After");
     expect(reportError).toHaveBeenCalledOnce();
   });
+
+  it("retries a diagram once when a remote image fails to decode", async () => {
+    const root = document.createElement("main");
+    root.innerHTML = '<pre><code class="language-mermaid">flowchart LR\nA --&gt; B</code></pre>';
+    const render = vi
+      .fn<MermaidApi["render"]>()
+      .mockRejectedValueOnce(new Error("The source image cannot be decoded."))
+      .mockResolvedValueOnce({ svg: "<svg><text>Recovered</text></svg>" });
+    const reportError = vi.fn();
+
+    await renderMermaidDiagrams(root, "light", async () => ({ initialize: vi.fn(), render }), reportError);
+
+    expect(render).toHaveBeenCalledTimes(2);
+    expect(root.textContent).toContain("Recovered");
+    expect(reportError).not.toHaveBeenCalled();
+  });
+
+  it("does not retry parse errors", async () => {
+    const root = document.createElement("main");
+    root.innerHTML = '<pre><code class="language-mermaid">invalid diagram</code></pre>';
+    const render = vi.fn<MermaidApi["render"]>().mockRejectedValue(new Error("Parse error on line 1"));
+    const reportError = vi.fn();
+
+    await renderMermaidDiagrams(root, "light", async () => ({ initialize: vi.fn(), render }), reportError);
+
+    expect(render).toHaveBeenCalledTimes(1);
+    expect(reportError).toHaveBeenCalledOnce();
+  });
 });

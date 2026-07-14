@@ -30,5 +30,6 @@
 - Add bundled themes beyond GitHub Light and GitHub Dark.
 - Add Markdown extensions such as footnotes, alerts, and math rendering where they remain lightweight and safe.
 - Add optional custom CSS overrides and a copyable AI usage guide.
+- Explore a browser extension that reuses the same renderer for Markdown files outside the IDE.
 
 Published version history belongs in GitHub Releases.

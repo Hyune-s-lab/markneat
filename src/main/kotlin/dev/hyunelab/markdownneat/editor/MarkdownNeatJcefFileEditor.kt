@@ -33,6 +33,7 @@ internal class MarkdownNeatJcefFileEditor(
     private val file: VirtualFile,
 ) : UserDataHolderBase(), FileEditor {
     private val document = requireNotNull(FileDocumentManager.getInstance().getDocument(file))
+    private val pageUrl = viewerPageUrl(file)
     private val browser = JBCefBrowser()
     private val readyQuery = JBCefJSQuery.create(browser as JBCefBrowserBase)
     private val loadRuntimeQuery = JBCefJSQuery.create(browser as JBCefBrowserBase)
@@ -100,7 +101,7 @@ internal class MarkdownNeatJcefFileEditor(
         val viewerHtml = checkNotNull(javaClass.getResource("/markdownneat/viewer.html")) {
             "Missing bundled renderer"
         }.readText()
-        browser.loadHTML(viewerHtml, file.url)
+        browser.loadHTML(viewerHtml, pageUrl)
     }
 
     override fun getComponent(): JComponent = browser.component
@@ -128,7 +129,7 @@ internal class MarkdownNeatJcefFileEditor(
               error: function(message) { ${errorQuery.inject("message")} }
             });
         """.trimIndent()
-        browser.cefBrowser.executeJavaScript(script, file.url, 0)
+        browser.cefBrowser.executeJavaScript(script, pageUrl, 0)
     }
 
     private fun render() {
@@ -137,8 +138,8 @@ internal class MarkdownNeatJcefFileEditor(
         }
         val settings = MarkdownNeatSettings.getInstance()
         val documentType = if (file.extension?.lowercase() in MERMAID_EXTENSIONS) "mermaid" else "markdown"
-        val request = rendererRequestJson(document.text, file.url, documentType, settings)
-        browser.cefBrowser.executeJavaScript("window.markdownNeat.render($request);", file.url, 0)
+        val request = rendererRequestJson(document.text, pageUrl, documentType, settings)
+        browser.cefBrowser.executeJavaScript("window.markdownNeat.render($request);", pageUrl, 0)
     }
 
     private fun loadRuntime(runtimeName: String) {
@@ -146,7 +147,7 @@ internal class MarkdownNeatJcefFileEditor(
             val script = markdownNeatRuntimeScript(runtimeName)
             ApplicationManager.getApplication().invokeLater({
                 if (isValid) {
-                    browser.cefBrowser.executeJavaScript(script, file.url, 0)
+                    browser.cefBrowser.executeJavaScript(script, pageUrl, 0)
                 }
             }, ModalityState.any())
         }
@@ -166,8 +167,8 @@ internal class MarkdownNeatJcefFileEditor(
         when (uri.scheme?.lowercase()) {
             "http", "https", "mailto" -> BrowserUtil.browse(uri)
             "file" -> {
-                val fileUri = URI(uri.scheme, uri.authority, uri.path, uri.query, null)
-                VirtualFileManager.getInstance().findFileByUrl(fileUri.toString())?.let { target ->
+                val path = uri.path ?: return
+                VirtualFileManager.getInstance().findFileByUrl("file://$path")?.let { target ->
                     OpenFileDescriptor(project, target).navigate(true)
                 }
             }

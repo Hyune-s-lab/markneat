@@ -69,8 +69,7 @@ export async function renderMermaidDiagrams(
 
   for (const diagram of diagrams) {
     try {
-      const id = `markdown-neat-mermaid-${diagramSequence++}`;
-      const result = await mermaid.render(id, diagram.source, diagram.container);
+      const result = await renderDiagram(mermaid, diagram.source, diagram.container);
       diagram.container.innerHTML = String(
         DOMPurify.sanitize(result.svg, {
           FORBID_TAGS: ["foreignObject", "script"],
@@ -83,6 +82,26 @@ export async function renderMermaidDiagrams(
       reportError(`Mermaid diagram failed: ${message}`);
     }
   }
+}
+
+async function renderDiagram(
+  mermaid: MermaidApi,
+  source: string,
+  container: Element,
+): Promise<MermaidRenderResult> {
+  try {
+    return await mermaid.render(`markdown-neat-mermaid-${diagramSequence++}`, source, container);
+  } catch (error) {
+    if (!isImageDecodeError(error)) {
+      throw error;
+    }
+    // Remote diagram images can fail to decode on a cold load; a retry hits the browser cache.
+    return await mermaid.render(`markdown-neat-mermaid-${diagramSequence++}`, source, container);
+  }
+}
+
+function isImageDecodeError(error: unknown): boolean {
+  return error instanceof Error && error.message.includes("image cannot be decoded");
 }
 
 function showDiagramError(container: HTMLElement, source: string, message: string): void {

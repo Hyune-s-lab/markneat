@@ -118,8 +118,9 @@ intellijPlatform {
         version = project.version.toString()
         changeNotes = """
             <ul>
-              <li>Add Compact and Spacious reading profiles.</li>
-              <li>Add body and code font selection, 90%–180% text scaling, adjustable content width, and live preview.</li>
+              <li>Fix the viewer showing raw Markdown for file paths with non-ASCII characters or spaces.</li>
+              <li>Allow https images so Mermaid icon nodes and remote Markdown images render.</li>
+              <li>Retry a Mermaid diagram once when a remote image fails to decode on a cold load.</li>
             </ul>
             <p>See the <a href="https://github.com/Hyune-s-lab/markdown-neat/releases/tag/v${project.version}">GitHub release notes</a>.</p>
         """.trimIndent()
