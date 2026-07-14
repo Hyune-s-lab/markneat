@@ -10,7 +10,6 @@ Newest planned version first. Published version history belongs in GitHub Releas
 - Add an Open as Text action that opens the underlying file in the IDE text editor without disabling MarkdownNeat.
 - Preserve heading anchors when a link opens another Markdown file.
 - Detect viewer bootstrap failures, log them, and fall back to the plain-text viewer.
-- Verify non-ASCII path rendering on Windows.
 
 ## 0.3.x — Appearance
 
