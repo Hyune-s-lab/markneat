@@ -4,7 +4,7 @@ Newest planned version first. Published version history belongs in GitHub Releas
 
 ## 0.4.x — Code Highlighting and Editing Handoff
 
-- Add offline syntax highlighting with a deliberately scoped set of language grammars, loaded through the shared optional-runtime boundary.
+- Add syntax highlighting with a deliberately scoped set of bundled language grammars, loaded through the shared optional-runtime boundary.
 - Organize theme accents for headings, bold, and inline code into highlight groups that profiles preset and checkboxes toggle individually.
 - Curate the recommended font lists down to five visually distinct choices each.
 - Add an Open as Text action that opens the underlying file in the IDE text editor without disabling MarkdownNeat.
