@@ -23,13 +23,21 @@
 - Configure a profile-independent content width from 768–1536 px or use the full available width.
 - Preview theme, profile, and typography changes before applying them.
 
+## 0.4.x — Code Highlighting and Editing Handoff
+
+- Add offline syntax highlighting with a deliberately scoped set of language grammars, loaded through the shared optional-runtime boundary.
+- Add an Open as Text action that opens the underlying file in the IDE text editor without disabling MarkdownNeat.
+- Preserve heading anchors when a link opens another Markdown file.
+- Detect viewer bootstrap failures, log them, and fall back to the plain-text viewer.
+- Verify non-ASCII path rendering on Windows.
+
 ## Later
 
-- Add offline syntax highlighting with a deliberately scoped set of language grammars.
 - Add D2 and Excalidraw through the shared optional-runtime boundary.
 - Add bundled themes beyond GitHub Light and GitHub Dark.
 - Add Markdown extensions such as footnotes, alerts, and math rendering where they remain lightweight and safe.
 - Add optional custom CSS overrides and a copyable AI usage guide.
+- Bundle a curated subset of frequently used diagram icons for offline and deterministic rendering.
 - Explore a browser extension that reuses the same renderer for Markdown files outside the IDE.
 
 Published version history belongs in GitHub Releases.
