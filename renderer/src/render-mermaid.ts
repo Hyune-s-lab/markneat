@@ -14,8 +14,18 @@ interface MermaidRenderResult {
   svg: string;
 }
 
+interface MermaidParseResult {
+  config?: {
+    themeVariables?: {
+      background?: unknown;
+    };
+  };
+  diagramType: string;
+}
+
 export interface MermaidApi {
   initialize(config: MermaidConfig): void;
+  parse(source: string): Promise<MermaidParseResult>;
   render(id: string, source: string, container?: Element): Promise<MermaidRenderResult>;
 }
 
@@ -76,11 +86,41 @@ export async function renderMermaidDiagrams(
           USE_PROFILES: { svg: true, svgFilters: true },
         }),
       );
+      await applyDiagramBackground(mermaid, diagram.source, diagram.container);
     } catch (error) {
       const message = errorMessage(error);
       showDiagramError(diagram.container, diagram.source, message);
       reportError(`Mermaid diagram failed: ${message}`);
     }
+  }
+}
+
+// Browser-side mermaid.render leaves the SVG background transparent; only the CLI translates
+// the frontmatter themeVariables.background into an SVG background. Mirror that here so
+// diagrams authored for a white canvas stay readable on the dark viewer theme.
+async function applyDiagramBackground(
+  mermaid: MermaidApi,
+  source: string,
+  container: HTMLElement,
+): Promise<void> {
+  const background = await runCatching(async () => {
+    const parsed = await mermaid.parse(source);
+    return parsed.config?.themeVariables?.background;
+  });
+  if (typeof background !== "string" || background.length === 0) {
+    return;
+  }
+  const svg = container.querySelector("svg");
+  if (svg !== null) {
+    svg.style.backgroundColor = background;
+  }
+}
+
+async function runCatching<T>(action: () => Promise<T>): Promise<T | undefined> {
+  try {
+    return await action();
+  } catch {
+    return undefined;
   }
 }
 

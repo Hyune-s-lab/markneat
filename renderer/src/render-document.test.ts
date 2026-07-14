@@ -5,7 +5,7 @@ import { renderDocument } from "./render-document";
 describe("renderDocument", () => {
   it("turns a standalone Mermaid file into a safe diagram block", () => {
     const result = renderDocument({
-      version: 3,
+      version: 4,
       source: 'flowchart LR\n  A["<script>alert(1)</script>"] --> B',
       baseUrl: "file:///project/system.mmd",
       documentType: "mermaid",

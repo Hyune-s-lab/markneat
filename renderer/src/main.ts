@@ -1,10 +1,13 @@
 import darkTheme from "github-markdown-css/github-markdown-dark.css?inline";
 import lightTheme from "github-markdown-css/github-markdown-light.css?inline";
+import hljsDarkTheme from "highlight.js/styles/github-dark.css?inline";
+import hljsLightTheme from "highlight.js/styles/github.css?inline";
 
 import "./viewer.css";
 import { applyAppearance } from "./apply-appearance";
 import { loadRuntime, runtimeFailed, runtimeReady } from "./load-runtime";
 import { renderDocument } from "./render-document";
+import { renderCodeHighlights } from "./render-highlight";
 import { renderMermaidDiagrams } from "./render-mermaid";
 import type { RenderRequest } from "./render-request";
 
@@ -74,7 +77,8 @@ function flushRender(): void {
 async function renderRequest(request: RenderRequest, generation: number): Promise<void> {
   try {
     const scrollTop = document.documentElement.scrollTop;
-    themeStyle.textContent = request.theme === "dark" ? darkTheme : lightTheme;
+    themeStyle.textContent =
+      request.theme === "dark" ? darkTheme + hljsDarkTheme : lightTheme + hljsLightTheme;
     document.documentElement.dataset.theme = request.theme;
     applyAppearance(document.documentElement, viewer, request);
     viewer.classList.remove("markdown-neat-error");
@@ -82,13 +86,12 @@ async function renderRequest(request: RenderRequest, generation: number): Promis
     await renderMermaidDiagrams(
       viewer,
       request.theme,
-      () =>
-        loadRuntime("mermaid", (name) => {
-          if (host === undefined) {
-            throw new Error("MarkdownNeat host is not connected");
-          }
-          host.loadRuntime(name);
-        }),
+      () => loadRuntime("mermaid", requestRuntimeFromHost),
+      (message) => host?.error(message),
+    );
+    await renderCodeHighlights(
+      viewer,
+      () => loadRuntime("highlight", requestRuntimeFromHost),
       (message) => host?.error(message),
     );
     if (generation !== renderGeneration) {
@@ -105,6 +108,13 @@ async function renderRequest(request: RenderRequest, generation: number): Promis
     viewer.classList.add("markdown-neat-error");
     host?.error(message);
   }
+}
+
+function requestRuntimeFromHost(name: string): void {
+  if (host === undefined) {
+    throw new Error("MarkdownNeat host is not connected");
+  }
+  host.loadRuntime(name);
 }
 
 document.addEventListener("click", (event) => {

@@ -24,6 +24,9 @@ class MarkdownNeatSettingsTest {
 
         assertEquals(MarkdownNeatTheme.DARK, settings.theme)
         assertEquals(MarkdownNeatProfile.SPACIOUS, settings.profile)
+        assertTrue(settings.accentHeadings)
+        assertFalse(settings.accentBold)
+        assertFalse(settings.accentInlineCode)
     }
 
     @Test
@@ -39,6 +42,9 @@ class MarkdownNeatSettingsTest {
         assertEquals(100, settings.fontScale)
         assertEquals(1152, settings.maxContentWidth)
         assertTrue(settings.useFullWidth)
+        assertFalse(settings.accentHeadings)
+        assertFalse(settings.accentBold)
+        assertFalse(settings.accentInlineCode)
         assertTrue(
             settings.updateAppearance(
                 theme = MarkdownNeatTheme.DARK,
@@ -50,6 +56,7 @@ class MarkdownNeatSettingsTest {
                 useFullWidth = true,
             ),
         )
+        assertFalse(settings.accentHeadings)
         assertEquals(MarkdownNeatTheme.DARK, settings.theme)
         assertEquals(MarkdownNeatProfile.SPACIOUS, settings.profile)
         assertEquals("Atkinson Hyperlegible", settings.bodyFontFamily)

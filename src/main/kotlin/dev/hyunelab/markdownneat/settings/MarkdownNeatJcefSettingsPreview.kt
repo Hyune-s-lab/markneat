@@ -1,8 +1,13 @@
 package dev.hyunelab.markdownneat.settings
 
+import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.util.Disposer
 import com.intellij.ui.jcef.JBCefApp
 import com.intellij.ui.jcef.JBCefBrowser
+import com.intellij.ui.jcef.JBCefBrowserBase
+import com.intellij.ui.jcef.JBCefJSQuery
+import dev.hyunelab.markdownneat.editor.markdownNeatRuntimeScript
 import dev.hyunelab.markdownneat.editor.rendererRequestJson
 import org.cef.browser.CefBrowser
 import org.cef.browser.CefFrame
@@ -32,11 +37,11 @@ internal val MARKDOWN_NEAT_SETTINGS_PREVIEW_SAMPLE = """
     ```typescript
     interface RenderRequest {
       source: string;
-      profile: "compact" | "spacious";
+      density: "compact" | "spacious";
     }
 
     export function render(request: RenderRequest): string {
-      const label = request.profile === "spacious" ? "Reading" : "Compact";
+      const label = request.density === "spacious" ? "Reading" : "Compact";
       return `${'$'}{label}: ${'$'}{request.source.length} characters`;
     }
     ```
@@ -47,14 +52,14 @@ internal val MARKDOWN_NEAT_SETTINGS_PREVIEW_SAMPLE = """
     viewer:
       mode: read-only
       theme: github-dark
-      profile: spacious
+      density: spacious
       typography:
         scale: 110
         content-width: full
       offline: true
     ```
 
-    > Blockquotes stay compact while Spacious adds a clear orange accent.
+    > Blockquotes follow the density, and highlight groups accent headings, bold, and inline code.
 
     - Compact keeps familiar GitHub spacing.
     - Spacious is tuned for longer reading sessions.
@@ -62,6 +67,7 @@ internal val MARKDOWN_NEAT_SETTINGS_PREVIEW_SAMPLE = """
 
 private class MarkdownNeatJcefSettingsPreview : MarkdownNeatSettingsPreview {
     private val browser = JBCefBrowser()
+    private val loadRuntimeQuery = JBCefJSQuery.create(browser as JBCefBrowserBase)
     private val previewSettings = MarkdownNeatSettings()
 
     @Volatile
@@ -76,6 +82,11 @@ private class MarkdownNeatJcefSettingsPreview : MarkdownNeatSettingsPreview {
     override val component: JComponent = browser.component.apply { name = "appearancePreview" }
 
     init {
+        Disposer.register(browser, loadRuntimeQuery)
+        loadRuntimeQuery.addHandler { runtimeName ->
+            loadRuntime(runtimeName)
+            JBCefJSQuery.Response(null)
+        }
         browser.jbCefClient.addLoadHandler(object : CefLoadHandlerAdapter() {
             override fun onLoadEnd(browser: CefBrowser, frame: CefFrame, httpStatusCode: Int) {
                 if (!frame.isMain || disposed) {
@@ -128,10 +139,21 @@ private class MarkdownNeatJcefSettingsPreview : MarkdownNeatSettingsPreview {
         )
     }
 
+    private fun loadRuntime(runtimeName: String) {
+        ApplicationManager.getApplication().executeOnPooledThread {
+            val script = markdownNeatRuntimeScript(runtimeName)
+            ApplicationManager.getApplication().invokeLater({
+                if (!disposed) {
+                    browser.cefBrowser.executeJavaScript(script, PREVIEW_URL, 0)
+                }
+            }, ModalityState.any())
+        }
+    }
+
     private fun connectScript(): String = """
         window.markdownNeat.connect({
           ready: function() {},
-          loadRuntime: function() {},
+          loadRuntime: function(name) { ${loadRuntimeQuery.inject("name")} },
           openLink: function() {},
           rendered: function() {},
           error: function() {}

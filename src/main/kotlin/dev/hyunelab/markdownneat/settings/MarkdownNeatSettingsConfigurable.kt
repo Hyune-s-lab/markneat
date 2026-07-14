@@ -4,9 +4,11 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.ui.ComboBox
 import com.intellij.openapi.options.Configurable
 import com.intellij.ui.JBSplitter
+import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.components.JBLabel
 import com.intellij.util.ui.FormBuilder
+import java.awt.FlowLayout
 import java.awt.GraphicsEnvironment
 import java.util.Hashtable
 import javax.swing.JComponent
@@ -29,6 +31,9 @@ class MarkdownNeatSettingsConfigurable internal constructor(
 
     private var themeField: ComboBox<MarkdownNeatTheme>? = null
     private var profileField: ComboBox<MarkdownNeatProfile>? = null
+    private var accentHeadingsField: JBCheckBox? = null
+    private var accentBoldField: JBCheckBox? = null
+    private var accentInlineCodeField: JBCheckBox? = null
     private var bodyFontField: ComboBox<String>? = null
     private var codeFontField: ComboBox<String>? = null
     private var fontScaleField: JSlider? = null
@@ -48,6 +53,9 @@ class MarkdownNeatSettingsConfigurable internal constructor(
             name = "profile"
             addActionListener { refreshPreview() }
         }
+        accentHeadingsField = accentCheckBox("accentHeadings", "Headings")
+        accentBoldField = accentCheckBox("accentBold", "Bold")
+        accentInlineCodeField = accentCheckBox("accentInlineCode", "Inline code")
 
         val installedFonts = availableFontFamilies()
         bodyFontField = ComboBox(
@@ -108,9 +116,15 @@ class MarkdownNeatSettingsConfigurable internal constructor(
                 refreshPreview()
             }
         }
+        val highlightGroupsRow = JPanel(FlowLayout(FlowLayout.LEADING, 12, 0)).apply {
+            add(requireNotNull(accentHeadingsField))
+            add(requireNotNull(accentBoldField))
+            add(requireNotNull(accentInlineCodeField))
+        }
         val form = FormBuilder.createFormBuilder()
             .addLabeledComponent(JBLabel("Theme:"), requireNotNull(themeField), 1, false)
-            .addLabeledComponent(JBLabel("Profile:"), requireNotNull(profileField), 1, false)
+            .addLabeledComponent(JBLabel("Density:"), requireNotNull(profileField), 1, false)
+            .addLabeledComponent(JBLabel("Highlight groups:"), highlightGroupsRow, 1, false)
             .addLabeledComponent(JBLabel("Body font:"), requireNotNull(bodyFontField), 1, false)
             .addLabeledComponent(JBLabel("Code font:"), requireNotNull(codeFontField), 1, false)
             .addLabeledComponent(requireNotNull(fontScaleLabel), requireNotNull(fontScaleField), 1, false)
@@ -132,6 +146,9 @@ class MarkdownNeatSettingsConfigurable internal constructor(
         val useFullWidth = selectedUseFullWidth()
         return themeField?.selectedItem != settings.theme ||
             profileField?.selectedItem != settings.profile ||
+            accentHeadingsField?.isSelected != settings.accentHeadings ||
+            accentBoldField?.isSelected != settings.accentBold ||
+            accentInlineCodeField?.isSelected != settings.accentInlineCode ||
             selectedFont(bodyFontField) != settings.bodyFontFamily ||
             selectedFont(codeFontField) != settings.codeFontFamily ||
             fontScaleField?.value != settings.fontScale ||
@@ -148,6 +165,9 @@ class MarkdownNeatSettingsConfigurable internal constructor(
     override fun reset() {
         themeField?.selectedItem = settings.theme
         profileField?.selectedItem = settings.profile
+        accentHeadingsField?.isSelected = settings.accentHeadings
+        accentBoldField?.isSelected = settings.accentBold
+        accentInlineCodeField?.isSelected = settings.accentInlineCode
         bodyFontField?.selectedItem = displayedFont(settings.bodyFontFamily)
         codeFontField?.selectedItem = displayedFont(settings.codeFontFamily)
         fontScaleField?.value = settings.fontScale
@@ -166,6 +186,9 @@ class MarkdownNeatSettingsConfigurable internal constructor(
         preview = null
         themeField = null
         profileField = null
+        accentHeadingsField = null
+        accentBoldField = null
+        accentInlineCodeField = null
         bodyFontField = null
         codeFontField = null
         fontScaleField = null
@@ -212,7 +235,16 @@ class MarkdownNeatSettingsConfigurable internal constructor(
         fontScale = fontScaleField?.value ?: settings.fontScale,
         maxContentWidth = selectedMaxContentWidth(),
         useFullWidth = selectedUseFullWidth(),
+        accentHeadings = accentHeadingsField?.isSelected ?: settings.accentHeadings,
+        accentBold = accentBoldField?.isSelected ?: settings.accentBold,
+        accentInlineCode = accentInlineCodeField?.isSelected ?: settings.accentInlineCode,
     )
+
+    private fun accentCheckBox(fieldName: String, label: String): JBCheckBox =
+        JBCheckBox(label).apply {
+            name = fieldName
+            addActionListener { refreshPreview() }
+        }
 
     private fun selectedUseFullWidth(): Boolean =
         contentWidthField?.value?.let { it == FULL_WIDTH_SLIDER_VALUE } ?: settings.useFullWidth
@@ -231,30 +263,18 @@ class MarkdownNeatSettingsConfigurable internal constructor(
         const val FONT_FALLBACK_TOOLTIP =
             "If the selected font is unavailable, MarkdownNeat uses the default system font."
         val RECOMMENDED_BODY_FONTS = listOf(
-            "Atkinson Hyperlegible",
-            "Inter",
             "Pretendard",
-            "Noto Sans",
-            "Noto Sans CJK KR",
-            "Apple SD Gothic Neo",
-            "Segoe UI",
-            "Arial",
-            "Helvetica",
-            "Georgia",
+            "Inter",
+            "Atkinson Hyperlegible",
             "Noto Serif",
-            "Times New Roman",
+            "D2Coding",
         )
         val RECOMMENDED_CODE_FONTS = listOf(
             "JetBrains Mono",
             "D2Coding",
             "Fira Code",
             "Cascadia Code",
-            "SF Mono",
             "Menlo",
-            "Monaco",
-            "Consolas",
-            "Source Code Pro",
-            "Ubuntu Mono",
         )
 
         fun displayedFont(fontFamily: String): String = fontFamily.ifEmpty { DEFAULT_FONT }

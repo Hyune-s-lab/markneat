@@ -1,6 +1,6 @@
 # Order Service Architecture Sample
 
-ASCII-filename baseline for comparing against the non-ASCII samples. Includes tables, code, and Mermaid diagrams.
+ASCII-filename baseline for comparing against the non-ASCII samples. Includes tables, code, Mermaid diagrams, **bold emphasis**, and inline code such as `Order.confirm()`.
 
 > Quote: every call behind the gateway is a **synchronous solid line**; events are *asynchronous dotted lines*.
 

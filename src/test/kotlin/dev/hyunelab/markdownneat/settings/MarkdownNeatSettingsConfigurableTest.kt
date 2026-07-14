@@ -2,6 +2,7 @@ package dev.hyunelab.markdownneat.settings
 
 import com.intellij.openapi.ui.ComboBox
 import com.intellij.ui.JBSplitter
+import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.components.JBLabel
 import java.awt.Component
 import java.awt.Container
@@ -44,13 +45,19 @@ class MarkdownNeatSettingsConfigurableTest {
         val bodyFontField = findNamed(component, "bodyFont") as ComboBox<String>
         @Suppress("UNCHECKED_CAST")
         val codeFontField = findNamed(component, "codeFont") as ComboBox<String>
+        val accentHeadingsField = findNamed(component, "accentHeadings") as JBCheckBox
+        val accentBoldField = findNamed(component, "accentBold") as JBCheckBox
+        val accentInlineCodeField = findNamed(component, "accentInlineCode") as JBCheckBox
         val fontScaleField = findNamed(component, "fontScale") as JSlider
         val contentWidthField = findNamed(component, "contentWidth") as JSlider
         val contentWidthLabel = findNamed(component, "contentWidthLabel") as JBLabel
+        assertFalse(accentHeadingsField.isSelected)
+        assertFalse(accentBoldField.isSelected)
+        assertFalse(accentInlineCodeField.isSelected)
         assertEquals("Default (system font)", bodyFontField.getItemAt(0))
         assertEquals("Default (system font)", codeFontField.getItemAt(0))
         assertEquals(
-            listOf("Default (system font)", "Atkinson Hyperlegible", "Arial"),
+            listOf("Default (system font)", "Atkinson Hyperlegible"),
             bodyFontField.items(),
         )
         assertEquals(
@@ -75,6 +82,11 @@ class MarkdownNeatSettingsConfigurableTest {
         assertTrue(preview.appearances.last().useFullWidth)
         themeField.selectedItem = MarkdownNeatTheme.DARK
         profileField.selectedItem = MarkdownNeatProfile.SPACIOUS
+        assertFalse(accentHeadingsField.isSelected)
+        assertFalse(accentBoldField.isSelected)
+        assertFalse(accentInlineCodeField.isSelected)
+        accentHeadingsField.doClick()
+        accentInlineCodeField.doClick()
         bodyFontField.selectedItem = "Atkinson Hyperlegible"
         codeFontField.selectedItem = "JetBrains Mono"
         fontScaleField.value = 130
@@ -94,6 +106,9 @@ class MarkdownNeatSettingsConfigurableTest {
                 fontScale = 130,
                 maxContentWidth = 1152,
                 useFullWidth = true,
+                accentHeadings = true,
+                accentBold = false,
+                accentInlineCode = true,
             ),
             preview.appearances.last(),
         )
@@ -106,6 +121,9 @@ class MarkdownNeatSettingsConfigurableTest {
         assertEquals(130, settings.fontScale)
         assertEquals(1152, settings.maxContentWidth)
         assertTrue(settings.useFullWidth)
+        assertTrue(settings.accentHeadings)
+        assertFalse(settings.accentBold)
+        assertTrue(settings.accentInlineCode)
         assertEquals(1, notifications)
         assertFalse(configurable.isModified)
 
@@ -129,7 +147,7 @@ class MarkdownNeatSettingsConfigurableTest {
         val configurable = MarkdownNeatSettingsConfigurable(
             settings = settings,
             notifySettingsChanged = {},
-            availableFontFamilies = { listOf("Arial", "JetBrains Mono") },
+            availableFontFamilies = { listOf("Atkinson Hyperlegible", "JetBrains Mono") },
             previewFactory = { null },
         )
         val component = configurable.createComponent()
@@ -145,7 +163,7 @@ class MarkdownNeatSettingsConfigurableTest {
         assertEquals(1152, contentWidthField.value)
         assertEquals("Maximum content width: 1152 px", contentWidthLabel.text)
         assertEquals(
-            listOf("Default (system font)", "Legacy Reading Font", "Arial"),
+            listOf("Default (system font)", "Legacy Reading Font", "Atkinson Hyperlegible"),
             bodyFontField.items(),
         )
         assertEquals(

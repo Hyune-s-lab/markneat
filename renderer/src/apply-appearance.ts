@@ -18,12 +18,31 @@ export function applyAppearance(
     "--markdown-neat-accent",
     request.theme === "dark" ? "#f0883e" : "#bc4c00",
   );
+  root.style.setProperty(
+    "--markdown-neat-bold-accent",
+    request.theme === "dark" ? "#d2a8ff" : "#8250df",
+  );
+  root.style.setProperty(
+    "--markdown-neat-code-accent",
+    request.theme === "dark" ? "#7ee787" : "#116329",
+  );
+  applyAccent(root, "accentHeadings", request.accentHeadings ?? profile === "spacious");
+  applyAccent(root, "accentBold", request.accentBold ?? false);
+  applyAccent(root, "accentInlineCode", request.accentInlineCode ?? false);
   viewer.style.lineHeight = profile === "spacious" ? "1.75" : "1.5";
   viewer.style.fontSize = `${(BASE_FONT_SIZE * clampFontScale(request.fontScale)) / 100}px`;
   viewer.style.maxWidth = contentWidth(request.maxContentWidth);
 
   applyBodyFont(viewer, request.bodyFontFamily ?? "");
   applyCodeFont(viewer, request.codeFontFamily ?? "");
+}
+
+function applyAccent(root: HTMLElement, name: string, enabled: boolean): void {
+  if (enabled) {
+    root.dataset[name] = "true";
+  } else {
+    delete root.dataset[name];
+  }
 }
 
 function applyBodyFont(viewer: HTMLElement, family: string): void {

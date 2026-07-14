@@ -8,9 +8,11 @@ import com.intellij.openapi.editor.event.DocumentEvent
 import com.intellij.openapi.editor.event.DocumentListener
 import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.fileEditor.FileEditor
+import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.fileEditor.FileEditorState
 import com.intellij.openapi.fileEditor.FileEditorStateLevel
 import com.intellij.openapi.fileEditor.OpenFileDescriptor
+import com.intellij.openapi.fileEditor.TextEditorWithPreview
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.util.UserDataHolderBase
@@ -25,7 +27,6 @@ import org.cef.browser.CefBrowser
 import org.cef.browser.CefFrame
 import org.cef.handler.CefLoadHandlerAdapter
 import java.beans.PropertyChangeListener
-import java.net.URI
 import javax.swing.JComponent
 
 internal class MarkdownNeatJcefFileEditor(
@@ -41,6 +42,7 @@ internal class MarkdownNeatJcefFileEditor(
     private val renderedQuery = JBCefJSQuery.create(browser as JBCefBrowserBase)
     private val errorQuery = JBCefJSQuery.create(browser as JBCefBrowserBase)
     private var rendererReady = false
+    private var pendingAnchor: String? = null
     @Volatile
     private var disposed = false
 
@@ -73,7 +75,14 @@ internal class MarkdownNeatJcefFileEditor(
             }
             JBCefJSQuery.Response(null)
         }
-        renderedQuery.addHandler { JBCefJSQuery.Response(null) }
+        renderedQuery.addHandler {
+            ApplicationManager.getApplication().invokeLater {
+                if (isValid) {
+                    applyPendingAnchor()
+                }
+            }
+            JBCefJSQuery.Response(null)
+        }
         errorQuery.addHandler { message ->
             LOG.warn("Renderer error for ${file.path}: $message")
             JBCefJSQuery.Response(null)
@@ -163,16 +172,38 @@ internal class MarkdownNeatJcefFileEditor(
     }
 
     private fun openLink(href: String) {
-        val uri = runCatching { URI(href) }.getOrNull() ?: return
-        when (uri.scheme?.lowercase()) {
-            "http", "https", "mailto" -> BrowserUtil.browse(uri)
-            "file" -> {
-                val path = uri.path ?: return
-                VirtualFileManager.getInstance().findFileByUrl("file://$path")?.let { target ->
-                    OpenFileDescriptor(project, target).navigate(true)
+        when (val target = linkTarget(href)) {
+            is LinkTarget.External -> BrowserUtil.browse(target.uri)
+            is LinkTarget.LocalFile -> {
+                val targetFile = VirtualFileManager.getInstance().findFileByUrl(target.vfsUrl) ?: return
+                OpenFileDescriptor(project, targetFile).navigate(true)
+                if (target.anchor != null) {
+                    FileEditorManager.getInstance(project).getEditors(targetFile)
+                        .map { editor -> if (editor is TextEditorWithPreview) editor.previewEditor else editor }
+                        .filterIsInstance<MarkdownNeatJcefFileEditor>()
+                        .firstOrNull()
+                        ?.scrollToAnchor(target.anchor)
                 }
             }
+            null -> Unit
         }
+    }
+
+    private fun scrollToAnchor(anchor: String) {
+        pendingAnchor = anchor
+        if (rendererReady) {
+            applyPendingAnchor()
+        }
+    }
+
+    private fun applyPendingAnchor() {
+        val anchor = pendingAnchor ?: return
+        pendingAnchor = null
+        browser.cefBrowser.executeJavaScript(
+            "document.getElementById(${anchor.toJsonString()})?.scrollIntoView();",
+            pageUrl,
+            0,
+        )
     }
 
     private companion object {

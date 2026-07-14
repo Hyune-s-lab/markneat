@@ -57,6 +57,18 @@ val buildMermaidRuntime by tasks.registering(Exec::class) {
     commandLine("npm", "run", "build:mermaid-runtime")
 }
 
+val buildHighlightRuntime by tasks.registering(Exec::class) {
+    dependsOn(npmInstall)
+    inputs.files(
+        "package.json",
+        "package-lock.json",
+        "scripts/build-highlight-runtime.mjs",
+        "renderer/runtime/highlight.ts",
+    )
+    outputs.file(layout.buildDirectory.file("generated/highlight/runtime-highlight.js"))
+    commandLine("npm", "run", "build:highlight-runtime")
+}
+
 val buildRuntimeLicenses by tasks.registering(Exec::class) {
     dependsOn(npmInstall)
     inputs.files("package-lock.json", "scripts/build-runtime-licenses.mjs")
@@ -72,14 +84,24 @@ val testMermaidRuntime by tasks.registering(Exec::class) {
     commandLine("npm", "run", "test:mermaid-runtime")
 }
 
+val testHighlightRuntime by tasks.registering(Exec::class) {
+    dependsOn(buildHighlightRuntime, npmInstall)
+    inputs.files("scripts/test-highlight-runtime.mjs")
+    inputs.file(layout.buildDirectory.file("generated/highlight/runtime-highlight.js"))
+    commandLine("npm", "run", "test:highlight-runtime")
+}
+
 val prepareRendererResources by tasks.registering(Copy::class) {
-    dependsOn(buildMermaidRuntime, buildRenderer, buildRuntimeLicenses, npmInstall)
+    dependsOn(buildHighlightRuntime, buildMermaidRuntime, buildRenderer, buildRuntimeLicenses, npmInstall)
     into(layout.buildDirectory.dir("generated/rendererResources"))
     from(layout.buildDirectory.file("generated/renderer/index.html")) {
         into("markdownneat")
         rename { "viewer.html" }
     }
     from(layout.buildDirectory.file("generated/mermaid/runtime-mermaid.js")) {
+        into("markdownneat")
+    }
+    from(layout.buildDirectory.file("generated/highlight/runtime-highlight.js")) {
         into("markdownneat")
     }
     from("LICENSE") {
@@ -108,7 +130,7 @@ tasks.processResources {
 }
 
 tasks.check {
-    dependsOn(testMermaidRuntime, testRenderer, typecheckRenderer)
+    dependsOn(testHighlightRuntime, testMermaidRuntime, testRenderer, typecheckRenderer)
 }
 
 intellijPlatform {
@@ -117,10 +139,17 @@ intellijPlatform {
         name = "MarkdownNeat"
         version = project.version.toString()
         changeNotes = """
+            <h3>New Features</h3>
             <ul>
-              <li>Fix the viewer showing raw Markdown for file paths with non-ASCII characters or spaces.</li>
-              <li>Allow https images so Mermaid icon nodes and remote Markdown images render.</li>
-              <li>Retry a Mermaid diagram once when a remote image fails to decode on a cold load.</li>
+              <li>Syntax highlighting for fenced code blocks with 12 bundled language grammars.</li>
+              <li>Highlight groups: individually toggled heading, bold, and inline code accents, independent of the Density setting.</li>
+              <li>Editor, split, and preview layouts with preview as the default, so files can be edited without disabling MarkdownNeat.</li>
+              <li>Links to other Markdown files now scroll to their heading anchor.</li>
+              <li>Recommended fonts trimmed to five distinct choices each, adding D2Coding for body text.</li>
+            </ul>
+            <h3>Bug Fixes</h3>
+            <ul>
+              <li>Apply the frontmatter diagram background so sequence and state diagrams keep their white canvas on the dark theme.</li>
             </ul>
             <p>See the <a href="https://github.com/Hyune-s-lab/markdown-neat/releases/tag/v${project.version}">GitHub release notes</a>.</p>
         """.trimIndent()

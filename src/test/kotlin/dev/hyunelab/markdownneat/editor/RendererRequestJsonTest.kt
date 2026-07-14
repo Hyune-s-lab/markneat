@@ -18,6 +18,7 @@ class RendererRequestJsonTest {
                 fontScale = 130,
                 maxContentWidth = 1280,
                 useFullWidth = true,
+                accentHeadings = true,
             )
         }
 
@@ -29,13 +30,13 @@ class RendererRequestJsonTest {
         )
 
         assertEquals(
-            """{"version":3,"source":"# Read\n","baseUrl":"file:///README.md","documentType":"markdown","theme":"dark","profile":"spacious","bodyFontFamily":"Font \"One\"","codeFontFamily":"Mono\\Code","fontScale":130,"maxContentWidth":null}""",
+            """{"version":4,"source":"# Read\n","baseUrl":"file:///README.md","documentType":"markdown","theme":"dark","profile":"spacious","bodyFontFamily":"Font \"One\"","codeFontFamily":"Mono\\Code","fontScale":130,"maxContentWidth":null,"accentHeadings":true,"accentBold":false,"accentInlineCode":false}""",
             request,
         )
 
-        settings.updateAppearance(settings.appearance.copy(useFullWidth = false))
+        settings.updateAppearance(settings.appearance.copy(useFullWidth = false, accentInlineCode = true))
         assertEquals(
-            """{"version":3,"source":"# Read\n","baseUrl":"file:///README.md","documentType":"markdown","theme":"dark","profile":"spacious","bodyFontFamily":"Font \"One\"","codeFontFamily":"Mono\\Code","fontScale":130,"maxContentWidth":1280}""",
+            """{"version":4,"source":"# Read\n","baseUrl":"file:///README.md","documentType":"markdown","theme":"dark","profile":"spacious","bodyFontFamily":"Font \"One\"","codeFontFamily":"Mono\\Code","fontScale":130,"maxContentWidth":1280,"accentHeadings":true,"accentBold":false,"accentInlineCode":true}""",
             rendererRequestJson(
                 source = "# Read\n",
                 baseUrl = "file:///README.md",

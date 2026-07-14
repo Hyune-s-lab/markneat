@@ -37,6 +37,9 @@ data class MarkdownNeatAppearance(
     val fontScale: Int,
     val maxContentWidth: Int,
     val useFullWidth: Boolean,
+    val accentHeadings: Boolean = false,
+    val accentBold: Boolean = false,
+    val accentInlineCode: Boolean = false,
 )
 
 @State(
@@ -54,9 +57,14 @@ class MarkdownNeatSettings : PersistentStateComponent<MarkdownNeatSettings.Setti
         var fontScale: Int = DEFAULT_FONT_SCALE,
         var maxContentWidth: Int = DEFAULT_CONTENT_WIDTH,
         var useFullWidth: Boolean = true,
+        var accentHeadings: Boolean = false,
+        var accentBold: Boolean = false,
+        var accentInlineCode: Boolean = false,
+        // Distinguishes pre-0.4 settings files, whose heading accent was implied by the profile.
+        var accentsInitialized: Boolean = false,
     )
 
-    private var settingsState = SettingsState()
+    private var settingsState = normalizedState(SettingsState())
 
     val theme: MarkdownNeatTheme
         get() = settingsState.theme
@@ -79,6 +87,15 @@ class MarkdownNeatSettings : PersistentStateComponent<MarkdownNeatSettings.Setti
     val useFullWidth: Boolean
         get() = settingsState.useFullWidth
 
+    val accentHeadings: Boolean
+        get() = settingsState.accentHeadings
+
+    val accentBold: Boolean
+        get() = settingsState.accentBold
+
+    val accentInlineCode: Boolean
+        get() = settingsState.accentInlineCode
+
     val appearance: MarkdownNeatAppearance
         get() = MarkdownNeatAppearance(
             theme,
@@ -88,6 +105,9 @@ class MarkdownNeatSettings : PersistentStateComponent<MarkdownNeatSettings.Setti
             fontScale,
             maxContentWidth,
             useFullWidth,
+            accentHeadings,
+            accentBold,
+            accentInlineCode,
         )
 
     fun updateAppearance(appearance: MarkdownNeatAppearance): Boolean = updateAppearance(
@@ -98,6 +118,9 @@ class MarkdownNeatSettings : PersistentStateComponent<MarkdownNeatSettings.Setti
         fontScale = appearance.fontScale,
         maxContentWidth = appearance.maxContentWidth,
         useFullWidth = appearance.useFullWidth,
+        accentHeadings = appearance.accentHeadings,
+        accentBold = appearance.accentBold,
+        accentInlineCode = appearance.accentInlineCode,
     )
 
     fun updateAppearance(
@@ -108,6 +131,9 @@ class MarkdownNeatSettings : PersistentStateComponent<MarkdownNeatSettings.Setti
         fontScale: Int,
         maxContentWidth: Int,
         useFullWidth: Boolean,
+        accentHeadings: Boolean = false,
+        accentBold: Boolean = false,
+        accentInlineCode: Boolean = false,
     ): Boolean {
         val nextState = normalizedState(
             SettingsState(
@@ -118,6 +144,10 @@ class MarkdownNeatSettings : PersistentStateComponent<MarkdownNeatSettings.Setti
                 fontScale,
                 maxContentWidth,
                 useFullWidth,
+                accentHeadings,
+                accentBold,
+                accentInlineCode,
+                accentsInitialized = true,
             ),
         )
         if (settingsState == nextState) {
@@ -149,6 +179,14 @@ class MarkdownNeatSettings : PersistentStateComponent<MarkdownNeatSettings.Setti
             codeFontFamily = state.codeFontFamily.trim(),
             fontScale = state.fontScale.coerceIn(MIN_FONT_SCALE, MAX_FONT_SCALE),
             maxContentWidth = state.maxContentWidth.coerceIn(MIN_CONTENT_WIDTH, MAX_CONTENT_WIDTH),
+            accentHeadings = if (state.accentsInitialized) {
+                state.accentHeadings
+            } else {
+                state.profile == MarkdownNeatProfile.SPACIOUS
+            },
+            accentBold = state.accentsInitialized && state.accentBold,
+            accentInlineCode = state.accentsInitialized && state.accentInlineCode,
+            accentsInitialized = true,
         )
     }
 }

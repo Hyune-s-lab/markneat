@@ -1,15 +1,13 @@
 # Roadmap
 
-Newest planned version first. Published version history belongs in GitHub Releases.
-
 ## 0.4.x — Code Highlighting and Editing Handoff
 
 - Add syntax highlighting with a deliberately scoped set of bundled language grammars, loaded through the shared optional-runtime boundary.
-- Organize theme accents for headings, bold, and inline code into highlight groups that profiles preset and checkboxes toggle individually.
+- Organize theme accents for headings, bold, and inline code into individually toggled highlight groups.
+- Rename the reading profile to density and keep it independent of highlight groups.
 - Curate the recommended font lists down to five visually distinct choices each.
 - Add an Open as Text action that opens the underlying file in the IDE text editor without disabling MarkdownNeat.
 - Preserve heading anchors when a link opens another Markdown file.
-- Detect viewer bootstrap failures, log them, and fall back to the plain-text viewer.
 
 ## 0.3.x — Appearance
 
@@ -36,6 +34,8 @@ Newest planned version first. Published version history belongs in GitHub Releas
 
 ## Later
 
+- Let each highlight group's color be customized individually.
+- Detect viewer bootstrap failures, log them, and fall back to the plain-text viewer.
 - Add D2 and Excalidraw through the shared optional-runtime boundary.
 - Add bundled themes beyond GitHub Light and GitHub Dark.
 - Add Markdown extensions such as footnotes, alerts, and math rendering where they remain lightweight and safe.

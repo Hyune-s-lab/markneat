@@ -1,6 +1,8 @@
+import type { HighlightApi } from "./render-highlight";
 import type { MermaidApi } from "./render-mermaid";
 
 interface RuntimeTypes {
+  highlight: HighlightApi;
   mermaid: MermaidApi;
 }
 

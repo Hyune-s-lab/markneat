@@ -1,17 +1,19 @@
 {
   "name": "markdown-neat",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "private": true,
   "type": "module",
   "engines": {
     "node": ">=22.12"
   },
   "scripts": {
+    "build:highlight-runtime": "node scripts/build-highlight-runtime.mjs",
     "build:mermaid-runtime": "node scripts/build-mermaid-runtime.mjs",
     "build:renderer": "vite build",
     "build:runtime-licenses": "node scripts/build-runtime-licenses.mjs",
     "inspect:jcef-theme": "node scripts/inspect-jcef-theme.mjs",
     "measure:renderer": "node --expose-gc scripts/measure-renderer.mjs",
+    "test:highlight-runtime": "node scripts/test-highlight-runtime.mjs",
     "test:mermaid-runtime": "node scripts/test-mermaid-runtime.mjs",
     "test:renderer": "vitest run",
     "typecheck:renderer": "tsc --noEmit"
@@ -19,6 +21,7 @@
   "dependencies": {
     "dompurify": "3.4.11",
     "github-markdown-css": "5.9.0",
+    "highlight.js": "11.11.1",
     "marked": "18.0.6",
     "mermaid": "11.16.0"
   },

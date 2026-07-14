@@ -5,7 +5,7 @@ import { renderMarkdown } from "./render-markdown";
 describe("renderMarkdown", () => {
   it("renders GitHub-flavored task lists", () => {
     const result = renderMarkdown({
-      version: 3,
+      version: 4,
       source: "# Tasks\n\n- [x] Render Markdown",
       baseUrl: "file:///project/docs/guide.md",
       documentType: "markdown",
@@ -24,7 +24,7 @@ describe("renderMarkdown", () => {
 
   it("removes executable and interactive content", () => {
     const result = renderMarkdown({
-      version: 3,
+      version: 4,
       source: [
         '<script>alert("no")</script>',
         '<div style="position: fixed" onclick="alert(1)">content</div>',
@@ -49,7 +49,7 @@ describe("renderMarkdown", () => {
 
   it("creates stable GitHub-style anchors for headings", () => {
     const result = renderMarkdown({
-      version: 3,
+      version: 4,
       source: "## Hello, MarkdownNeat!\n\n## Hello, MarkdownNeat!",
       baseUrl: "file:///project/readme.md",
       documentType: "markdown",

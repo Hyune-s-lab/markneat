@@ -33,7 +33,7 @@ describe("viewer theme", () => {
       rendered: vi.fn(),
     });
     window.markdownNeat.render({
-      version: 3,
+      version: 4,
       source: "# Dark",
       baseUrl: "file:///README.md",
       documentType: "markdown",
@@ -66,7 +66,7 @@ describe("viewer theme", () => {
       rendered: vi.fn(),
     });
     window.markdownNeat.render({
-      version: 3,
+      version: 4,
       source: "# Readable\n\n![Diagram](diagram.png)",
       baseUrl: "file:///README.md",
       documentType: "markdown",
@@ -109,7 +109,7 @@ describe("viewer theme", () => {
       rendered: vi.fn(),
     });
     window.markdownNeat.render({
-      version: 3,
+      version: 4,
       source: "Text",
       baseUrl: "file:///README.md",
       documentType: "markdown",
@@ -130,7 +130,7 @@ describe("viewer theme", () => {
     );
 
     window.markdownNeat.render({
-      version: 3,
+      version: 4,
       source: "Text",
       baseUrl: "file:///README.md",
       documentType: "markdown",
@@ -166,7 +166,7 @@ describe("viewer theme", () => {
       rendered,
     });
     window.markdownNeat.render({
-      version: 3,
+      version: 4,
       source: "```mermaid\nflowchart LR\nA --> B\n```",
       baseUrl: "file:///README.md",
       documentType: "markdown",

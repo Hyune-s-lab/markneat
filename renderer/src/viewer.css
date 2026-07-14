@@ -44,13 +44,30 @@ body {
   border: 1px solid #d1d9e0;
 }
 
+:root[data-accent-headings="true"] .markdown-body h1,
+:root[data-accent-headings="true"] .markdown-body h2,
+:root[data-accent-headings="true"] .markdown-body h3,
+:root[data-accent-headings="true"] .markdown-body h4,
+:root[data-accent-headings="true"] .markdown-body h5,
+:root[data-accent-headings="true"] .markdown-body h6 {
+  color: var(--markdown-neat-accent);
+}
+
+:root[data-accent-bold="true"] .markdown-body strong,
+:root[data-accent-bold="true"] .markdown-body b {
+  color: var(--markdown-neat-bold-accent);
+}
+
+:root[data-accent-inline-code="true"] .markdown-body :not(pre) > code {
+  color: var(--markdown-neat-code-accent);
+}
+
 :root[data-profile="spacious"] .markdown-body h1,
 :root[data-profile="spacious"] .markdown-body h2,
 :root[data-profile="spacious"] .markdown-body h3,
 :root[data-profile="spacious"] .markdown-body h4,
 :root[data-profile="spacious"] .markdown-body h5,
 :root[data-profile="spacious"] .markdown-body h6 {
-  color: var(--markdown-neat-accent);
   line-height: 1.25;
   letter-spacing: 0.01em;
 }
@@ -102,6 +119,11 @@ body {
 :root[data-profile="spacious"] .markdown-body th,
 :root[data-profile="spacious"] .markdown-body td {
   padding: 0.75em 1em;
+}
+
+.markdown-body pre code.hljs {
+  padding: 0;
+  background: transparent;
 }
 
 .markdown-body[data-custom-code-font="true"] code,
