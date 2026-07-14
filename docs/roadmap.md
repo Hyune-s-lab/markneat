@@ -41,4 +41,4 @@
 - Add Markdown extensions such as footnotes, alerts, and math rendering where they remain lightweight and safe.
 - Add optional custom CSS overrides and a copyable AI usage guide.
 - Bundle a curated subset of frequently used diagram icons for offline and deterministic rendering.
-- Explore a browser extension that reuses the same renderer for Markdown files outside the IDE.
+- Build a Chrome extension (Edge runs Chrome extensions as-is) that replaces GitHub's built-in Mermaid rendering with the bundled Mermaid 11 runtime, because GitHub cannot draw `@{ img }` icon nodes and only partially honors frontmatter themes; reuse the icon and theme conventions and force a white canvas in dark mode.
